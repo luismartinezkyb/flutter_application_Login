@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 //import 'package:social_login_buttons/social_login_buttons.dart';
 
@@ -12,6 +13,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  void sharedMethod() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs
+        .setStringList('user', <String>[txtConUser.text, txtConPwd.text]);
+
+    //final List<String>? users = prefs.getStringList('user');
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   bool newSwitch = false;
   TextEditingController txtConUser = TextEditingController();
   TextEditingController txtConPwd = TextEditingController();
@@ -78,11 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text('Save your session: '),
                       Switch(
-                          value: false,
+                          value: newSwitch,
                           onChanged: (val) {
-                            // setState(() {
-                            //   checkBool = !checkBool;
-                            // });
+                            print(val);
+                            setState(() {
+                              newSwitch = !newSwitch;
+                            });
                             // method1('The switch value is $checkBool');
                           })
                     ],
