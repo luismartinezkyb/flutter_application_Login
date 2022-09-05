@@ -13,13 +13,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  //this is to start form validation but is not required
+  //final _formKey = GlobalKey<FormState>();
+
+  //to initializate the sharedMethod
   void sharedMethod() async {
     final prefs = await SharedPreferences.getInstance();
-
     await prefs
         .setStringList('user', <String>[txtConUser.text, txtConPwd.text]);
-
     //final List<String>? users = prefs.getStringList('user');
+  }
+
+  //to remove the user shared preferences if exists
+  void removeMethod() async {
+    final prefs = await SharedPreferences.getInstance();
+    final success = await prefs.remove('user');
   }
 
   @override
@@ -113,16 +121,17 @@ class _LoginScreenState extends State<LoginScreen> {
               bottom: MediaQuery.of(context).size.height / 4.1,
               child: GestureDetector(
                 onTap: () {
-                  //print('Valor de la caja txt ${txtConUser.text}');
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => DashboardScreen()),
-                  // );
-                  setState(() {
-                    txtConUser.text.isEmpty
-                        ? txtConUser.text = 'DEFAULT_USER'
-                        : '';
-                  });
+                  print(newSwitch);
+                  if (newSwitch) {
+                    sharedMethod();
+                  } else {
+                    removeMethod();
+                  }
+                  // setState(() {
+                  //   txtConUser.text.isEmpty
+                  //       ? txtConUser.text = 'DEFAULT_USER'
+                  //       : '';
+                  // });
                   Navigator.pushNamed(context, '/dash', arguments: {
                     "username": txtConUser.text,
                     "password": txtConPwd.text

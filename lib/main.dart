@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen(),
+      home: const SplashScreen2(),
       routes: {
-        '/dash': (BuildContext context) => DashboardScreen(),
+        '/dash': (BuildContext context) => DashBoardScreen2(),
         '/login': (BuildContext context) => LoginScreen(),
       },
     );
