@@ -65,10 +65,13 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
                                             actions: [
                                               TextButton(
                                                   onPressed: () {
-                                                    _database!.deleteTask(
-                                                        snapshot.data![index]
-                                                            .idTask!,
-                                                        'tblTasks');
+                                                    setState(() {
+                                                      _database!.deleteTask(
+                                                          snapshot.data![index]
+                                                              .idTask!,
+                                                          'tblTasks');
+                                                    });
+                                                    Navigator.pop(context);
                                                   },
                                                   child: Text('Aceptar')),
                                               TextButton(
