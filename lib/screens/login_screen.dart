@@ -59,7 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          color: Colors.red,
           image: DecorationImage(
             image: AssetImage('assets/pokemon_fondo.jpeg'),
             fit: BoxFit.cover,

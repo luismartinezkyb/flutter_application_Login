@@ -1,6 +1,6 @@
-# flutter_application_1
+# flutter_application_Login
 
-A new Flutter project.
+A new Flutter project for class.
 
 ## Getting Started
 

@@ -1,7 +1,7 @@
 class TasksDAO {
   int? idTask;
   String? dscTask;
-  DateTime? fechaEntrega;
+  String? fechaEntrega;
 
   TasksDAO({this.idTask, this.dscTask, this.fechaEntrega});
 

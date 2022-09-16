@@ -54,8 +54,8 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       //}
     }
     return CircleAvatar(
-      backgroundImage: NetworkImage(
-          'https://avatars.githubusercontent.com/u/89945446?s=400&u=40d485d0893e497a977d3bd6b156a15c41e8ab06&v=4'),
+      backgroundImage:
+          NetworkImage('https://avatars.githubusercontent.com/u/89945446?v=4'),
     );
   }
 
@@ -141,6 +141,15 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       body: Container(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
         height: MediaQuery.of(context).size.height,
+        child: Center(
+            child: ElevatedButton(
+          onPressed: () {
+            removeMethod();
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/login', (route) => false);
+          },
+          child: Text('EMERGENCY LOG OUT'),
+        )),
         decoration: BoxDecoration(
           color: Colors.red,
           image: DecorationImage(

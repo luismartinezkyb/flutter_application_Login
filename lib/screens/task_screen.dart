@@ -26,8 +26,10 @@ class _TaskScreenState extends State<TaskScreen> {
     final tfFecha = TextField(
       controller: txtFechaTask,
       maxLines: 2,
+      decoration: InputDecoration(border: OutlineInputBorder()),
     );
     final tfDescTask = TextField(
+      decoration: InputDecoration(border: OutlineInputBorder()),
       controller: txtDescTask,
     );
     final btnSave = ElevatedButton(
@@ -35,7 +37,12 @@ class _TaskScreenState extends State<TaskScreen> {
         _database!.insertTask({
           'dscTask': txtDescTask.text,
           'fechaEntrega': txtFechaTask.text,
-        }, 'tblTasks');
+        }, 'tblTasks').then((value) => {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Insert completed'),
+              ))
+            });
+        Navigator.pushNamedAndRemoveUntil(context, '/task', (route) => false);
       },
       child: Text('Save'),
     );
@@ -43,6 +50,7 @@ class _TaskScreenState extends State<TaskScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('New Task')),
       body: ListView(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
         children: [
           tfFecha,
           SizedBox(height: 10),
