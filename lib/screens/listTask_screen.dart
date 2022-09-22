@@ -52,7 +52,18 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                  onPressed: null, icon: Icon(Icons.edit)),
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/addTask',
+                                        arguments: {
+                                          "idTask":
+                                              snapshot.data![index].idTask!,
+                                          "dscTask":
+                                              snapshot.data![index].dscTask!,
+                                          "fechaEntrega": snapshot
+                                              .data![index].fechaEntrega!,
+                                        });
+                                  },
+                                  icon: Icon(Icons.edit)),
                               IconButton(
                                   onPressed: () {
                                     showDialog(

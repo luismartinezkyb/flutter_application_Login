@@ -5,6 +5,7 @@ import 'package:flutter_application_1/screens/listTask_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/splash_screen.dart';
 import 'package:flutter_application_1/screens/task_screen.dart';
+import 'package:flutter_application_1/screens/user_profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/login': (BuildContext context) => LoginScreen(),
         '/task': (BuildContext context) => ListTaskScreen(),
         '/addTask': (BuildContext context) => TaskScreen(),
+        '/userprofile': (BuildContext context) => UserProfileScreen(),
       },
     );
   }

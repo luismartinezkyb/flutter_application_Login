@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final nameDB = 'TAREASBD';
+  static final nameDB = 'TAREASBD2';
   static final versionDB = 1;
 
   static Database? _database;

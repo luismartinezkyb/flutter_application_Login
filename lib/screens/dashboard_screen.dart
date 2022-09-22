@@ -53,9 +53,11 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       );
       //}
     }
-    return CircleAvatar(
-      backgroundImage:
-          NetworkImage('https://avatars.githubusercontent.com/u/89945446?v=4'),
+    return Hero(
+      tag: 'profile_picture',
+      child: CircleAvatar(
+        backgroundImage: AssetImage('assets/ProfilePicture.png'),
+      ),
     );
   }
 
@@ -64,18 +66,11 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
 //METHODS OF ARGUMENTS
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    //if (arguments.isEmpty || arguments['username'] == 'DEFAULT_USER') {
-    //} else {
-    //email = arguments['username'].replaceAll(' ', '') + '@gmail.com';
-    //}
 
-    //if (arguments.isEmpty || arguments['username'] == 'DEFAULT_USER') {
     if (usernamePref == '') {
-      print('ARGUMENTosS $arguments');
       if (arguments.isEmpty || arguments['username'].isEmpty) {
         nameUser = 'DEFAULT_USER';
         email = 'example@mail.com';
-        print("HEEEEEEYOOO HEEEELLLLL");
       } else {
         setState(() {
           checkPhoto = false;
@@ -98,7 +93,12 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
         child: ListView(
           children: [
             UserAccountsDrawerHeader(
-              currentAccountPicture: newFoto(),
+              currentAccountPicture: GestureDetector(
+                  child: newFoto(),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/userprofile');
+                    print("hey");
+                  }),
               accountName: Text(
                 nameUser,
                 style: TextStyle(color: Colors.white, fontSize: 18),

@@ -23,6 +23,17 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     TextEditingController txtFechaTask = TextEditingController();
     TextEditingController txtDescTask = TextEditingController();
+    final argumentsTask = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    if (argumentsTask.isEmpty) {
+      print('Vaciossss');
+    } else {
+      setState(() {
+        txtFechaTask.text = argumentsTask['fechaEntrega'];
+        txtDescTask.text = argumentsTask['dscTask'];
+      });
+    }
+
     final tfFecha = TextField(
       controller: txtFechaTask,
       maxLines: 2,
@@ -34,21 +45,38 @@ class _TaskScreenState extends State<TaskScreen> {
     );
     final btnSave = ElevatedButton(
       onPressed: () {
-        _database!.insertTask({
-          'dscTask': txtDescTask.text,
-          'fechaEntrega': txtFechaTask.text,
-        }, 'tblTasks').then((value) => {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Insert completed'),
-              ))
-            });
+        if (argumentsTask.isEmpty) {
+          _database!.insertTask({
+            'dscTask': txtDescTask.text,
+            'fechaEntrega': txtFechaTask.text,
+          }, 'tblTasks').then((value) => {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Insert completed'),
+                  ),
+                ),
+              });
+        } else {
+          _database!.updateTask({
+            'idTask': argumentsTask['idTask'],
+            'dscTask': txtDescTask.text,
+            'fechaEntrega': txtFechaTask.text,
+          }, 'tblTasks').then((value) => {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Task Updated Succesfully!'),
+                ))
+              });
+        }
+
         Navigator.pushNamedAndRemoveUntil(context, '/task', (route) => false);
       },
       child: Text('Save'),
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text('New Task')),
+      appBar: AppBar(
+        title: argumentsTask.isEmpty ? Text('New Task') : Text('Edit Task'),
+      ),
       body: ListView(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
         children: [
