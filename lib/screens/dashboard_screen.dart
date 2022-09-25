@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/theme_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /////***//***//***//***//***//***//
@@ -86,10 +87,10 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bienvenido ${nameUser}'),
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Theme.of(context).backgroundColor,
       ),
       drawer: Drawer(
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Theme.of(context).backgroundColor,
         child: ListView(
           children: [
             UserAccountsDrawerHeader(
@@ -142,16 +143,31 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
         padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
         height: MediaQuery.of(context).size.height,
         child: Center(
-            child: ElevatedButton(
-          onPressed: () {
-            removeMethod();
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/login', (route) => false);
-          },
-          child: Text('EMERGENCY LOG OUT'),
-        )),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            margin:
+                EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(35),
+              color: Colors.white70,
+            ),
+            child: Column(
+              children: [
+                ThemeScreeen(),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    removeMethod();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false);
+                  },
+                  child: Text('EMERGENCY LOG OUT'),
+                ),
+              ],
+            ),
+          ),
+        ),
         decoration: BoxDecoration(
-          color: Colors.red,
           image: DecorationImage(
             image: AssetImage('assets/img_fondo.jpeg'),
             fit: BoxFit.cover,
