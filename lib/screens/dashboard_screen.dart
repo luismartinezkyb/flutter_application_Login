@@ -141,7 +141,6 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
               trailing: Icon(Icons.settings),
               title: Text('Base de datos'),
               onTap: () {
-                print('hola');
                 Navigator.pushNamed(context, '/task');
               },
             ),
@@ -156,7 +155,15 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 //Navigator.pushNamedAndRemoveUntil(context, (route) => ModalRoute('/login'));
                 //Navigator.pushNamed(context, '/login');
               },
-            )
+            ),
+            ListTile(
+              leading: Image.asset('assets/pokebola2.png'),
+              trailing: Icon(Icons.star_border_sharp),
+              title: Text('OnboardingPage'),
+              onTap: () {
+                Navigator.pushNamed(context, '/onboardingPage');
+              },
+            ),
           ],
         ),
       ),
