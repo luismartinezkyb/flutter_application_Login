@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/theme_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../database/database_helper_photo.dart';
 
 /////***//***//***//***//***//***//
 ////////***//***//***//***//***//***///////***//***//***//***//***//***///////***//***//***//***//***//***//
@@ -15,6 +19,7 @@ class DashBoardScreen2 extends StatefulWidget {
 }
 
 class _DashBoardScreen2State extends State<DashBoardScreen2> {
+  DatabaseHelperPhoto? _database;
   String usernamePref = '';
   String pwdPref = '';
   String email = '';
@@ -43,27 +48,38 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   @override
   void initState() {
     sharedMethod();
+
+    _database = DatabaseHelperPhoto();
     super.initState();
   }
 
-  Widget newFoto() {
-    if (usernamePref == '' && checkPhoto) {
-      return CircleAvatar(
-        backgroundColor: Colors.white38,
-        child: Text('US'),
-      );
-      //}
-    }
-    return Hero(
-      tag: 'profile_picture',
-      child: CircleAvatar(
-        backgroundImage: AssetImage('assets/ProfilePicture.png'),
-      ),
-    );
-  }
+//FileImage(File(snapshot.data![0]['photoName']))
+//_database
 
   @override
   Widget build(BuildContext context) {
+    final futuro = FutureBuilder(
+      future: _database!.getPic(1),
+      builder: (context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.hasData) {
+          //FileImage(File(snapshot.data![0]['photoName']))
+          print(
+              'SI HAY UNA IMAGEN GUARDADA Y ES ${snapshot.data![0]['photoName']}');
+          return CircleAvatar(
+            backgroundImage: FileImage(File(snapshot.data![0]['photoName'])),
+          );
+        }
+        if (snapshot.hasError) {
+          print('HAY UN ERROR EN LA IMAGEN');
+          return CircularProgressIndicator();
+        }
+        // CircleAvatar(
+        //     backgroundImage: AssetImage('assets/ProfilePicture.png'),
+        //   );
+        return CircularProgressIndicator();
+      },
+    );
+
 //METHODS OF ARGUMENTS
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
@@ -95,10 +111,15 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
           children: [
             UserAccountsDrawerHeader(
               currentAccountPicture: GestureDetector(
-                  child: newFoto(),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/userprofile');
-                    print("hey");
+                  child: Hero(tag: 'profile_picture', child: futuro),
+                  onTap: () async {
+                    final data =
+                        await Navigator.pushNamed(context, '/userprofile');
+                    print(data);
+
+                    setState(() {
+                      build(context);
+                    });
                   }),
               accountName: Text(
                 nameUser,

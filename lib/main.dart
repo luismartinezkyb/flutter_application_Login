@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/counter_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
+import 'package:flutter_application_1/screens/edit_profile_screen.dart';
 import 'package:flutter_application_1/screens/listTask_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/splash_screen.dart';
@@ -41,6 +42,7 @@ class PMSNApp extends StatelessWidget {
         '/task': (BuildContext context) => ListTaskScreen(),
         '/addTask': (BuildContext context) => TaskScreen(),
         '/userprofile': (BuildContext context) => UserProfileScreen(),
+        '/editProfilePage': (BuildContext context) => EditProfilePage(),
       },
     );
   }
