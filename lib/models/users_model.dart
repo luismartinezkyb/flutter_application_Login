@@ -1,34 +1,32 @@
-// int? idUser=1;
-//   String? imageUser='assets/ProfilePicture.png';
-//   String? nameUser = 'Luis Martinez';
-//   String? emailUser = 'luismartinez@gmail.com';
-//   String? phoneUser '54121231231';
-//   String? githubUser 'luismartinez@gmail.com';
+class UserModel {
+  late int? idUser = 0;
+  late String? nameUser = "";
+  late String? emailUser = "";
+  late String? phoneUser = "";
+  late String? githubUser = "";
 
-class UsersDAO {
-  int? idUser;
-  String? imageUser;
-  String? nameUser;
-  String? emailUser;
-  String? phoneUser;
-  String? githubUser;
+  UserModel(int i, String name, String email, String phone, String github) {
+    this.nameUser = name;
+    this.emailUser = email;
+    this.phoneUser = phone;
+    this.githubUser = github;
+  }
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      'idUser': idUser,
+      'nameUser': nameUser,
+      'emailUser': emailUser,
+      'phoneUser': phoneUser,
+      'githubUser': githubUser,
+    };
+    return map;
+  }
 
-  UsersDAO(
-      {this.idUser,
-      this.imageUser,
-      this.nameUser,
-      this.emailUser,
-      this.phoneUser,
-      this.githubUser});
-
-  factory UsersDAO.fromJSON(Map<String, dynamic> mapUser) {
-    return UsersDAO(
-      idUser: mapUser['idUser'],
-      imageUser: mapUser['imageUser'],
-      nameUser: mapUser['nameUser'],
-      emailUser: mapUser['emailUser'],
-      phoneUser: mapUser['phoneUser'],
-      githubUser: mapUser['githubUser'],
-    );
+  UserModel.fromMap(Map<String, dynamic> map) {
+    idUser = map['idUser'];
+    nameUser = map['nameUser'];
+    emailUser = map['emailUser'];
+    phoneUser = map['phoneUser'];
+    githubUser = map['githubUser'];
   }
 }

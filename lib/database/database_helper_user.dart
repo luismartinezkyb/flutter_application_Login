@@ -1,19 +1,27 @@
 import 'dart:io';
 
 import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/users_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelperUser {
-  static final nameDB = 'TAREASBD2';
+  static final nameDB = 'USERINFO1';
   static final versionDB = 1;
+  static final String ID = 'idUser';
+  static final String NAME = 'nameUser';
+  static final String EMAIL = 'emailUser';
+  static final String PHONE = 'phoneUser';
+  static final String GITHUB = 'githubUser';
+  static final String TABLE = 'userTable';
 
   static Database? _database;
 
-  Future<Database> get database async {
+  Future<Database?> get database async {
     if (_database != null) return _database!;
-    return _database = await _initDatabase();
+    _database = await _initDatabase();
+    return _database;
   }
 
   _initDatabase() async {
@@ -28,45 +36,25 @@ class DatabaseHelperUser {
 
   _createTables(Database db, int version) async {
     String query =
-        'CREATE TABLE tblUser(idUser INTEGER PRIMARY KEY, imageUser TEXT, nameUser VARCHAR(255), emailUser VARCHAR(255), phoneUser VARCHAR(15), githubUser VARCHAR(255))';
+        'CREATE TABLE $TABLE($ID INTEGER, $NAME TEXT, $EMAIL TEXT, $PHONE TEXT, $GITHUB TEXT)';
     await db.execute(query);
   }
 
-  Future<int> insertUser(Map<String, dynamic> row, String tblName) async {
+  Future<int> save(UserModel user) async {
+    print(user);
     var connection = await database;
-    return await connection.insert(tblName, row);
+    return await connection!.insert(TABLE, user.toMap());
   }
 
-  Future<int> updateUser(Map<String, dynamic> row, String tblName) async {
+  Future<List> getUser() async {
     var connection = await database;
-    return await connection
-        .update(tblName, row, where: 'idUser = ?', whereArgs: [row['idUser']]);
+    var result = await connection!.query(TABLE);
+    return result;
   }
 
-  Future getUser(int id) async {
+  Future<int> updateUser(UserModel user) async {
     var connection = await database;
-    var result =
-        await connection.query('tblUser', where: "idUser = ?", whereArgs: [id]);
-    print(result);
-    return print(result);
+    return await connection!
+        .update(TABLE, user.toMap(), where: 'idUser = ?', whereArgs: [0]);
   }
-
-  // Future<int> deleteUser(int idTask, String tblName) async {
-  //   var connection = await database;
-  //   return await connection
-  //       .delete(tblName, where: 'idTask = ?', whereArgs: [idTask]);
-  // }
-
-  Future<List<TasksDAO>> getAllTasks() async {
-    var connection = await database;
-    var result = await connection.query('tblTasks');
-    return result.map((mapTask) => TasksDAO.fromJSON(mapTask)).toList();
-  }
-
-  // getClient(int id) async {
-  //   final db = await database;
-  //   var res =await  db.query("Client", where: "id = ?", whereArgs: [id]);
-  //   return res.isNotEmpty ? Client.fromMap(res.first) : Null ;
-  // }
-
 }

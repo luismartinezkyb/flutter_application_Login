@@ -1,6 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_application_1/database/database_helper_user.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import '../database/database_helper_photo.dart';
+import '../models/photo_model.dart';
+import '../models/users_model.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -10,21 +19,128 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  TextEditingController txtName = TextEditingController();
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtPhone = TextEditingController();
-  TextEditingController txtGithubPage = TextEditingController();
+  DatabaseHelperPhoto? _databasePhoto;
+  DatabaseHelperUser? _databaseUser;
+
+  File? _image;
+
+  Future getImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      final imageTemporary = File(image.path);
+
+      //final imagePermament = await saveFilePerma(image.path);
+
+      setState(() {
+        this._image = imageTemporary;
+        //print('EL PATH DE LA IMAGEN TEMPRAL ES: ${imageTemporary.path}');
+        photo pic = photo(0, imageTemporary.path);
+        _databasePhoto!.updatePhoto(pic).then((value) => {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Imagen Actualizada Exitosamente!'),
+                ),
+              ),
+            });
+        //imagePermament
+      });
+      //print(_image);
+    } on PlatformException catch (e) {
+      print('Failed to pick the image : $e');
+    }
+  }
+
+  late SimpleDialog _sb;
+
+  void dialogMethod() {
+    _sb = SimpleDialog(
+      title: Text('Elige una nueva Foto'),
+      children: [
+        SimpleDialogOption(
+          child: Text('Elegir de Galeria'),
+          onPressed: () {
+            getImage(ImageSource.gallery);
+            Navigator.pop(context);
+          },
+        ),
+        SimpleDialogOption(
+          child: Text('Tomar Foto'),
+          onPressed: () {
+            getImage(ImageSource.camera);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _sb;
+        });
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
+    _databasePhoto = DatabaseHelperPhoto();
+    _databaseUser = DatabaseHelperUser();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _txtName = TextEditingController();
+    final TextEditingController _txtEmail = TextEditingController();
+    final TextEditingController _txtPhone = TextEditingController();
+    final TextEditingController _txtGithubPage = TextEditingController();
+    final futuro = FutureBuilder(
+      future: _databasePhoto!.getPic(1),
+      builder: (context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.hasData) {
+          return GestureDetector(
+            onTap: () async {
+              dialogMethod();
+            },
+            child: Image.file(
+              File(snapshot.data![0]['photoName']),
+              fit: BoxFit.cover,
+              width: 120,
+              height: 120,
+            ),
+          );
+        }
+        if (snapshot.hasError) {
+          return Ink.image(
+            image: AssetImage('assets/ProfilePicture.png'),
+            fit: BoxFit.cover,
+            width: 120,
+            height: 120,
+            child: InkWell(
+              onTap: () async {
+                dialogMethod();
+              },
+            ),
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    );
+
+    //ARGUMENTS
+    final argumentsTask = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    if (argumentsTask.isEmpty) {
+      print('Vaciossss');
+    } else {
+      setState(() {
+        _txtName.text = argumentsTask['userName'];
+        _txtEmail.text = argumentsTask['emailUser'];
+        _txtPhone.text = argumentsTask['phoneUser'];
+        _txtGithubPage.text = argumentsTask['githubUser'];
+      });
+    }
     final tfName = TextField(
-      controller: txtName,
+      controller: _txtName,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -32,7 +148,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
     final tfEmail = TextField(
-      controller: txtEmail,
+      controller: _txtEmail,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -40,7 +156,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
     final tfPhone = TextField(
-      controller: txtPhone,
+      controller: _txtPhone,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -48,7 +164,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
     final tfGithubPage = TextField(
-      controller: txtGithubPage,
+      controller: _txtGithubPage,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -58,6 +174,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back),
+          onTap: () {
+            Navigator.pop(context, 'newData');
+          },
+        ),
         backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0,
         title: Text('Editting User Info'),
@@ -70,8 +192,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
             height: 10,
           ),
           ProfileWidget(
-            imagePath: 'assets/ProfilePicture.png',
-            onClicked: () async {},
+            imagePath: Hero(
+              tag: 'profile_picture',
+              child: ClipOval(
+                child: Material(color: Colors.transparent, child: futuro),
+              ),
+            ),
+            onClicked: () async {
+              dialogMethod();
+            },
           ),
           SizedBox(height: 30),
           // TextFieldWidget(
@@ -161,10 +290,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   shadowColor: Colors.black),
               onPressed: () {
                 //HERE Is the code for back to the user profile
-
-                print(txtName.text);
-                print(txtPhone.text);
-                print(txtEmail.text);
+                UserModel newUser = UserModel(0, _txtName.text, _txtEmail.text,
+                    _txtPhone.text, _txtGithubPage.text);
+                _databaseUser!.updateUser(newUser).then((value) => {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Usuario Actualizado Exitosamente'),
+                        ),
+                      ),
+                    });
+                print(_txtName.text);
+                print(_txtPhone.text);
+                print(_txtEmail.text);
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/userprofile', (route) => false);
               },
@@ -203,7 +340,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 }
 
 class ProfileWidget extends StatelessWidget {
-  final String imagePath;
+  final Widget imagePath;
   final VoidCallback onClicked;
 
   const ProfileWidget(
@@ -216,31 +353,14 @@ class ProfileWidget extends StatelessWidget {
     return Center(
       child: Stack(
         children: [
-          buildImage(),
+          imagePath,
           Positioned(
             bottom: 0,
             right: 4,
-            child: buildEditIcon(color),
+            child:
+                GestureDetector(onTap: onClicked, child: buildEditIcon(color)),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildImage() {
-    return Hero(
-      tag: 'profile_picture',
-      child: ClipOval(
-        child: Material(
-          color: Colors.transparent,
-          child: Ink.image(
-            image: AssetImage(imagePath),
-            fit: BoxFit.cover,
-            width: 120,
-            height: 120,
-            child: InkWell(onTap: onClicked),
-          ),
-        ),
       ),
     );
   }

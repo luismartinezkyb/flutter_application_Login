@@ -5,13 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_application_1/database/database_helper_photo.dart';
+
 import 'package:flutter_application_1/models/photo_model.dart';
+import 'package:flutter_application_1/models/users_model.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 
+import '../database/database_helper_user.dart';
 import '../settings/styles_settings.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -23,6 +26,7 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   DatabaseHelperPhoto? _database;
+  DatabaseHelperUser? _database2;
 
   File? _image;
 
@@ -53,19 +57,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-//this method is for store the image in the system permanently every time the image changes
-  // Future<File> saveFilePerma(String imagePath) async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final name = path.basename(imagePath);
-  //   final image = File('${directory.path}/$name');
-  //   //print('The final path is ${directory.path}/$name');
-
-  //   return File('imagePath').copy(image.path);
-  // }
-
   @override
   void initState() {
     _database = DatabaseHelperPhoto();
+    _database2 = DatabaseHelperUser();
     super.initState();
   }
 
@@ -98,6 +93,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         });
   }
 
+  late String imageUsuario = "";
+  late String nombreUsuario = "";
+  late String correoUsuario = "";
+  late String telefonoUsuario = "";
+  late String gitUsuario = "";
+
   bool verifyTheme = false;
   @override
   Widget build(BuildContext context) {
@@ -106,11 +107,47 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     //PARA GUARDAR LA PRIMERA IMAGEN
     // photo pic = photo(0, urlAsset);
     // _database!.save(pic);
+    // UserModel newUser = UserModel(0, 'Luis Martinez', 'luismartinez@gmail.com',
+    //     '4612091668', 'https://github.com/luismartinezkyb');
+    // _database2!.save(newUser);
+
+    final futuro2 = FutureBuilder(
+      future: _database2!.getUser(),
+      builder: (context, AsyncSnapshot<List> snapshot2) {
+        if (snapshot2.hasData) {
+          nombreUsuario = snapshot2.data![0]['nameUser'];
+          correoUsuario = snapshot2.data![0]['emailUser'];
+          telefonoUsuario = snapshot2.data![0]['phoneUser'];
+          gitUsuario = snapshot2.data![0]['githubUser'];
+          // print(
+          //     'Name user: $nombreUsuario, Email $correoUsuario, Phone: $telefonoUsuario');
+          return Column(
+            children: [
+              SizedBox(height: 24),
+              buildName(nombreUsuario, correoUsuario),
+              SizedBox(height: 38),
+              buildInfo(telefonoUsuario, gitUsuario),
+              SizedBox(height: 48),
+            ],
+          );
+        }
+        if (snapshot2.hasError) {
+          nombreUsuario = "null";
+          correoUsuario = "null";
+          telefonoUsuario = "null";
+          gitUsuario = "null";
+          return CircularProgressIndicator();
+        }
+        return CircularProgressIndicator();
+      },
+    );
 
     final futuro = FutureBuilder(
       future: _database!.getPic(1),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
+          imageUsuario = snapshot.data![0]['photoName'];
+          print('el path ess $imageUsuario');
           return GestureDetector(
             onTap: () async {
               dialogMethod();
@@ -147,7 +184,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         leading: GestureDetector(
           child: Icon(Icons.arrow_back),
           onTap: () {
-            Navigator.pop(context, 'newData');
+            // Navigator.popUntil(context, (route) => false)
+            // Navigator.pop(context, 'newData');
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/dash', (route) => false);
           },
         ),
         title: Text('User Profile'),
@@ -185,20 +225,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               dialogMethod();
             },
           ),
-          SizedBox(height: 24),
-          buildName('Luis Martinez'),
-          SizedBox(height: 38),
-          buildInfo(),
-          SizedBox(height: 48),
-
-          // Center(child: buildEditButton()),
+          futuro2,
+          Center(child: buildEditButton()),
         ],
       ),
     );
   }
 //tengo que activar el boton para saber por que tengo mal la bd
 
-  Widget buildName(String user) => Column(
+  Widget buildName(String user, String email) => Column(
         children: [
           Text(
             user,
@@ -206,13 +241,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           SizedBox(height: 10),
           Text(
-            'luismartinez@gmail.com',
+            email,
             style: TextStyle(color: Colors.grey),
           ),
         ],
       );
 
-  Widget buildInfo() => Container(
+  Widget buildInfo(String numero, String github) => Container(
         padding: EdgeInsets.symmetric(horizontal: 48),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -224,7 +259,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             SizedBox(
               height: 10,
             ),
-            Text('4612091668'),
+            Text(numero),
             SizedBox(
               height: 40,
             ),
@@ -235,7 +270,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             SizedBox(
               height: 10,
             ),
-            Text('https://github.com/luismartinezkyb')
+            Text(github)
           ],
         ),
       );
@@ -246,21 +281,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             shape: StadiumBorder(),
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             shadowColor: Colors.black),
-        onPressed: () {
-          // _database!.insertUser({
-          //   'imageUser': 'assets/ProfilePicture.png',
-          //   'nameUser': 'Luis Martinez',
-          //   'emailUser': 'luismartinez@gmail.com',
-          //   'phoneUser': '4612091668',
-          //   'githubUser': 'https://github.com/luismartinezkyb'
-          // }, 'tblUser').then((value) => {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //         SnackBar(
-          //           content: Text('Insert completed'),
-          //         ),
-          //       ),
-          //     });
-          // Navigator.pushNamed(context, '/editProfilePage');
+        onPressed: () async {
+          final data = await Navigator.pushNamed(context, '/editProfilePage',
+              arguments: {
+                "imageUser": imageUsuario,
+                "userName": nombreUsuario,
+                "emailUser": correoUsuario,
+                "phoneUser": telefonoUsuario,
+                "githubUser": gitUsuario,
+              });
+          print(data);
+          setState(() {
+            build(context);
+          });
         },
         child: Text('Edit your profile'),
       );
