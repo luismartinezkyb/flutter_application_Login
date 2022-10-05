@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/theme_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database_helper_photo.dart';
+import '../settings/styles_settings.dart';
 
 /////***//***//***//***//***//***//
 ////////***//***//***//***//***//***///////***//***//***//***//***//***///////***//***//***//***//***//***//
@@ -25,6 +28,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   String email = '';
   String nameUser = '';
   bool checkPhoto = true;
+  int numTema = 1;
 //METHODS SHARED ETC
 //METHODS OF SHARED PREFERENCES
   void sharedMethod() async {
@@ -48,7 +52,6 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   @override
   void initState() {
     sharedMethod();
-
     _database = DatabaseHelperPhoto();
     super.initState();
   }
@@ -58,13 +61,15 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider tema = Provider.of<ThemeProvider>(context);
+
     final futuro = FutureBuilder(
       future: _database!.getPic(1),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
           //FileImage(File(snapshot.data![0]['photoName']))
-          print(
-              'SI HAY UNA IMAGEN GUARDADA Y ES ${snapshot.data![0]['photoName']}');
+          //print(
+          //  'SI HAY UNA IMAGEN GUARDADA Y ES ${snapshot.data![0]['photoName']}');
           return CircleAvatar(
             backgroundImage: FileImage(File(snapshot.data![0]['photoName'])),
           );
@@ -136,8 +141,43 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 ),
               ),
             ),
+            ExpansionTile(
+              leading: Image.asset(
+                'assets/pokebola2.png',
+                width: 40,
+                height: 40,
+              ),
+              title: Text("Cambiar Tema"),
+              children: [
+                ListTile(
+                  trailing: Icon(Icons.dark_mode),
+                  title: Text('Dark Mode'),
+                  onTap: () {
+                    tema.sethemeData(temaNoche());
+                  },
+                ),
+                ListTile(
+                  trailing: Icon(Icons.light_mode),
+                  title: Text('Ligth Mode'),
+                  onTap: () {
+                    tema.sethemeData(temaDia());
+                  },
+                ),
+                ListTile(
+                  trailing: Icon(Icons.people),
+                  title: Text('Custom Mode'),
+                  onTap: () {
+                    tema.sethemeData(temaCalido());
+                  },
+                ),
+              ],
+            ),
             ListTile(
-              leading: Image.asset('assets/pokebola2.png'),
+              leading: Image.asset(
+                'assets/pokebola2.png',
+                width: 40,
+                height: 40,
+              ),
               trailing: Icon(Icons.settings),
               title: Text('Base de datos'),
               onTap: () {
@@ -145,7 +185,11 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
               },
             ),
             ListTile(
-              leading: Image.asset('assets/pokebola2.png'),
+              leading: Image.asset(
+                'assets/pokebola2.png',
+                width: 40,
+                height: 40,
+              ),
               trailing: Icon(Icons.close),
               title: Text('Log out'),
               onTap: () {
@@ -156,14 +200,18 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 //Navigator.pushNamed(context, '/login');
               },
             ),
-            ListTile(
-              leading: Image.asset('assets/pokebola2.png'),
-              trailing: Icon(Icons.star_border_sharp),
-              title: Text('OnboardingPage'),
-              onTap: () {
-                Navigator.pushNamed(context, '/onboardingPage');
-              },
-            ),
+            // ListTile(
+            //   leading: Image.asset(
+            //     'assets/pokebola2.png',
+            //     width: 40,
+            //     height: 40,
+            //   ),
+            //   trailing: Icon(Icons.wb_sunny_outlined),
+            //   title: Text('OnboardingPage'),
+            //   onTap: () {
+            //     Navigator.pushNamed(context, '/onboardingPage');
+            //   },
+            // ),
           ],
         ),
       ),
@@ -189,7 +237,10 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/login', (route) => false);
                   },
-                  child: Text('EMERGENCY LOG OUT'),
+                  child: Text(
+                    'EMERGENCY LOG OUT',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

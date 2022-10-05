@@ -1,13 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen_view/splash_screen_view.dart';
 
+//int estilo = 1;
+
+void sharedMethod(int numTema) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  //LEE
+  final int? counter = prefs.getInt('numTema');
+  if (counter != null) {
+    //ELIMINA
+    print('SI EXISTE UN TEMA Y ERA: $counter');
+    final success = await prefs.remove('numTema');
+  }
+  //DECLARA
+  await prefs.setInt('numTema', numTema);
+}
+
+// ThemeData temaChecar() {
+//   print('ENTRA AL METODO PARA CHECAR CON ESTILO');
+//   switch (estilo) {
+//     case 1:
+//       return temaDia();
+//       break;
+//     case 2:
+//       return temaNoche();
+//       break;
+//     case 3:
+//       return temaCalido();
+//       break;
+//   }
+//   final ThemeData base = ThemeData.light();
+//   return base.copyWith(
+//       backgroundColor: Colors.red, dialogBackgroundColor: Colors.white);
+// }
+
 ThemeData temaDia() {
+  print('Se acaba de cambiar al Color Dia');
+  sharedMethod(1);
   final ThemeData base = ThemeData.light();
   return base.copyWith(
       backgroundColor: Colors.red, dialogBackgroundColor: Colors.white);
 }
 
 ThemeData temaNoche() {
+  sharedMethod(2);
+  print('Se acaba de cambiar al Color Noche');
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
     backgroundColor: Color.fromARGB(255, 75, 17, 5),
@@ -16,6 +55,8 @@ ThemeData temaNoche() {
 }
 
 ThemeData temaCalido() {
+  sharedMethod(3);
+  print('Se acaba de cambiar al Color Calido');
   final ThemeData base = ThemeData(
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: Colors.green,
@@ -25,9 +66,9 @@ ThemeData temaCalido() {
   return base.copyWith(
     splashColor: Colors.purple[300],
     backgroundColor: Colors.purple[300],
-    dialogBackgroundColor: Colors.purple[300],
+    dialogBackgroundColor: Colors.black,
     brightness: Brightness.light,
-    secondaryHeaderColor: Colors.purple[300],
+    secondaryHeaderColor: Colors.white,
     scaffoldBackgroundColor: Colors.purple[100],
     colorScheme: ColorScheme.light(
       onPrimary: Colors.purple,

@@ -10,19 +10,19 @@ import 'package:flutter_application_1/screens/splash_screen.dart';
 import 'package:flutter_application_1/screens/task_screen.dart';
 import 'package:flutter_application_1/screens/user_profile_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => ThemeProvider(), child: PMSNApp());
-  }
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final int? counter = prefs.getInt('numTema');
+  final int variable = counter != null ? counter : 1;
+  return runApp(
+    ChangeNotifierProvider(
+      child: PMSNApp(),
+      create: (BuildContext context) => ThemeProvider(selectedTheme: variable),
+    ),
+  );
 }
 
 //CounterScreen

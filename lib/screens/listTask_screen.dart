@@ -23,6 +23,13 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back),
+          onTap: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/dash', (route) => false);
+          },
+        ),
         title: Text('List Task'),
         actions: [
           IconButton(

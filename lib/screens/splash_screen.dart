@@ -2,40 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/counter_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
+import 'package:flutter_application_1/screens/onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 
-class SplashScreen extends StatelessWidget {
-  //const SplashScreen({super.key});
-  bool verifyUser = false;
-  void sharedMethod() async {
-    final prefs = await SharedPreferences.getInstance();
-    final List<String>? users = prefs.getStringList('user');
-    if (users != null) {
-      verifyUser = true;
-    }
-    print('Users check $verifyUser');
-    print(users);
-  }
+// class SplashScreen extends StatelessWidget {
+//   //const SplashScreen({super.key});
+//   bool verifyUser = false;
+//   void sharedMethod() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     final List<String>? users = prefs.getStringList('user');
+//     if (users != null) {
+//       verifyUser = true;
+//     }
+//     print('Users check $verifyUser');
+//     print(users);
+//   }
 
-//abajo de navigateRoute
-  @override
-  Widget build(BuildContext context) {
-    sharedMethod();
-    return SplashScreenView(
-      navigateRoute: LoginScreen(),
-      duration: 3000,
-      imageSize: 130,
-      imageSrc: "assets/logoitc.png",
-      text: "New Application",
-      textType: TextType.ScaleAnimatedText,
-      textStyle: const TextStyle(
-        fontSize: 30.0,
-      ),
-      backgroundColor: Colors.white,
-    );
-  }
-}
+// //abajo de navigateRoute
+//   @override
+//   Widget build(BuildContext context) {
+//     sharedMethod();
+//     return SplashScreenView(
+//       navigateRoute: LoginScreen(),
+//       duration: 3000,
+//       imageSize: 130,
+//       imageSrc: "assets/logoitc.png",
+//       text: "Bienvenido",
+//       textType: TextType.ScaleAnimatedText,
+//       textStyle: const TextStyle(
+//         fontSize: 30.0,
+//       ),
+//       backgroundColor: Colors.white,
+//     );
+//   }
+// }
 
 //***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//*** */
 //***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//***//*** */
@@ -71,7 +72,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
 
   Widget newNavigate() {
     if (verifyUser) {
-      return DashBoardScreen2();
+      return OnboardingPage();
     } else {
       return LoginScreen();
     }
@@ -84,12 +85,12 @@ class _SplashScreen2State extends State<SplashScreen2> {
       duration: 3000,
       imageSize: 130,
       imageSrc: "assets/logoitc.png",
-      text: "New Application",
+      text: "Bienvenido",
       textType: TextType.ScaleAnimatedText,
       textStyle: const TextStyle(
         fontSize: 30.0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 }

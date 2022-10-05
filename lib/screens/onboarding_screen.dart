@@ -253,7 +253,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   TypewriterAnimatedText(
                       'Aunque obviamente tenemos experiencia con todo tipo...'),
                   TypewriterAnimatedText(
-                      'Ojala podamos encontrarnos pronto para enseñarte mis pokes!')
+                      'Ojala podamos encontrarnos pronto en nuestro equipo!')
                 ]),
             buildPage(
                 color: Colors.green.shade100,
@@ -312,8 +312,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 leading: Image.asset('assets/pokebola2.png'),
               ),
               onPressed: () async {
-                Navigator.pop(context);
-                print('hola');
+                Navigator.pushNamed(context, '/dash');
               },
             )
           : Container(
