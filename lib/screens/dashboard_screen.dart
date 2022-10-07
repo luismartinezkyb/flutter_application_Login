@@ -141,6 +141,41 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 ),
               ),
             ),
+            Column(
+              children: [
+                ExpansionTile(
+                  leading: Image.asset(
+                    'assets/pokebola2.png',
+                    width: 40,
+                    height: 40,
+                  ),
+                  title: Text("Cambiar Tema"),
+                  children: [
+                    ListTile(
+                      trailing: Icon(Icons.dark_mode),
+                      title: Text('Dark Mode'),
+                      onTap: () {
+                        tema.sethemeData(temaNoche());
+                      },
+                    ),
+                    ListTile(
+                      trailing: Icon(Icons.light_mode),
+                      title: Text('Ligth Mode'),
+                      onTap: () {
+                        tema.sethemeData(temaDia());
+                      },
+                    ),
+                    ListTile(
+                      trailing: Icon(Icons.people),
+                      title: Text('Custom Mode'),
+                      onTap: () {
+                        tema.sethemeData(temaCalido());
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
             ExpansionTile(
               leading: Image.asset(
                 'assets/pokebola2.png',
@@ -184,21 +219,51 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 Navigator.pushNamed(context, '/task');
               },
             ),
+
             ListTile(
               leading: Image.asset(
                 'assets/pokebola2.png',
                 width: 40,
                 height: 40,
               ),
-              trailing: Icon(Icons.close),
-              title: Text('Log out'),
+              trailing: Icon(Icons.movie),
+              title: Text('Popular Movies'),
               onTap: () {
-                removeMethod();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/login', (route) => false);
-                //Navigator.pushNamedAndRemoveUntil(context, (route) => ModalRoute('/login'));
-                //Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/list');
               },
+            ),
+            ListTile(
+              leading: Image.asset(
+                'assets/pokebola2.png',
+                width: 40,
+                height: 40,
+              ),
+              trailing: Icon(Icons.settings),
+              title: Text('About us'),
+              onTap: () {
+                Navigator.pushNamed(context, '/about');
+              },
+            ),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: ListTile(
+                  leading: Image.asset(
+                    'assets/pokebola2.png',
+                    width: 40,
+                    height: 40,
+                  ),
+                  trailing: Icon(Icons.close),
+                  title: Text('Log out'),
+                  onTap: () {
+                    removeMethod();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false);
+                    //Navigator.pushNamedAndRemoveUntil(context, (route) => ModalRoute('/login'));
+                    //Navigator.pushNamed(context, '/login');
+                  },
+                ),
+              ),
             ),
             // ListTile(
             //   leading: Image.asset(

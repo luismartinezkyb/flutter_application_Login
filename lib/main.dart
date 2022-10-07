@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
+import 'package:flutter_application_1/screens/about_us_screen.dart';
 import 'package:flutter_application_1/screens/counter_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/edit_profile_screen.dart';
 import 'package:flutter_application_1/screens/listTask_screen.dart';
+import 'package:flutter_application_1/screens/list_popular_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/onboarding_screen.dart';
+import 'package:flutter_application_1/screens/popular_movies/popular_details_screen.dart';
 import 'package:flutter_application_1/screens/splash_screen.dart';
 import 'package:flutter_application_1/screens/task_screen.dart';
 import 'package:flutter_application_1/screens/user_profile_screen.dart';
@@ -45,6 +48,9 @@ class PMSNApp extends StatelessWidget {
         '/userprofile': (BuildContext context) => UserProfileScreen(),
         '/editProfilePage': (BuildContext context) => EditProfilePage(),
         '/onboardingPage': (BuildContext context) => OnboardingPage(),
+        '/list': (BuildContext context) => ListPopularScreen(),
+        '/moviesDetail': (BuildContext context) => PopularDetailScreen(),
+        '/about': (BuildContext context) => AboutUsScreen(),
       },
     );
   }

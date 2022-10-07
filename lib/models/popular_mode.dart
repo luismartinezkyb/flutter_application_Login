@@ -27,15 +27,17 @@ class PopularModel {
 
   factory PopularModel.fromJSON(Map<String, dynamic> mapMovies) {
     return PopularModel(
-      backdropPath: mapMovies['backdrop_path'],
+      backdropPath: mapMovies['backdrop_path'] ?? '',
       id: mapMovies['id'],
       originalLanguage: mapMovies['original_language'],
       originalTitle: mapMovies['original_title'],
       overview: mapMovies['overview'],
       popularity: mapMovies['popularity'],
-      posterPath: mapMovies['poster_`ath'],
+      posterPath: mapMovies['poster_path'] ?? '',
       title: mapMovies['title'],
-      voteAverage: mapMovies['vote_average'],
+      voteAverage: mapMovies['vote_average'] is int
+          ? (mapMovies['vote_average'] as int).toDouble()
+          : mapMovies['vote_average'],
       voteCount: mapMovies['vote_count'],
     );
   }
