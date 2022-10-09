@@ -71,10 +71,10 @@ ThemeData temaCalido() {
     secondaryHeaderColor: Colors.white,
     scaffoldBackgroundColor: Colors.purple[100],
     colorScheme: ColorScheme.light(
-      onPrimary: Colors.purple,
+      onPrimary: Colors.white,
       onBackground: Colors.purple,
       background: Colors.purple,
-      primary: Colors.purple,
+      primary: Colors.white,
       secondary: Colors.purple,
     ),
   );

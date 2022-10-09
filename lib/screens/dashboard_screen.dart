@@ -105,6 +105,63 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       email = usernamePref.replaceAll(' ', '') + '@gmail.com';
     }
 
+    Widget ColorWidgetRow() {
+      return Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              tema.sethemeData(temaDia());
+            },
+            child: Text(''),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red,
+              shape: CircleBorder(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              tema.sethemeData(temaNoche());
+            },
+            child: Text(''),
+            style: ElevatedButton.styleFrom(
+              primary: Color.fromARGB(255, 75, 17, 5),
+              shape: CircleBorder(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              tema.sethemeData(temaCalido());
+            },
+            child: Text(''),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.purple,
+              shape: CircleBorder(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              tema.sethemeData(temaAmarillo());
+            },
+            child: Text(''),
+            style: ElevatedButton.styleFrom(
+              primary: Color.fromARGB(255, 210, 229, 34),
+              shape: CircleBorder(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              tema.sethemeData(temaAzul());
+            },
+            child: Text(''),
+            style: ElevatedButton.styleFrom(
+              primary: Color.fromARGB(255, 50, 26, 231),
+              shape: CircleBorder(),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Bienvenido ${nameUser}'),
@@ -176,37 +233,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 ),
               ],
             ),
-            ExpansionTile(
-              leading: Image.asset(
-                'assets/pokebola2.png',
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Cambiar Tema"),
-              children: [
-                ListTile(
-                  trailing: Icon(Icons.dark_mode),
-                  title: Text('Dark Mode'),
-                  onTap: () {
-                    tema.sethemeData(temaNoche());
-                  },
-                ),
-                ListTile(
-                  trailing: Icon(Icons.light_mode),
-                  title: Text('Ligth Mode'),
-                  onTap: () {
-                    tema.sethemeData(temaDia());
-                  },
-                ),
-                ListTile(
-                  trailing: Icon(Icons.people),
-                  title: Text('Custom Mode'),
-                  onTap: () {
-                    tema.sethemeData(temaCalido());
-                  },
-                ),
-              ],
-            ),
+
             ListTile(
               leading: Image.asset(
                 'assets/pokebola2.png',
@@ -294,7 +321,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
             ),
             child: Column(
               children: [
-                ThemeScreeen(),
+                ColorWidgetRow(),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {

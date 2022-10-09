@@ -39,137 +39,195 @@ class _OnboardingPageState extends State<OnboardingPage> {
     fontWeight: FontWeight.bold,
     fontFamily: 'Horizon',
   );
-  Widget buildPage({
-    required Color color,
-    required String urlImage,
-    required String backgroundImage,
-    required String title,
-    required String subtitle,
-    required List<AnimatedText> frases,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        image: DecorationImage(
-          image: AssetImage(backgroundImage),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned(
-            top: MediaQuery.of(context).size.width / 1.5,
-            child: Image.asset(
-              urlImage,
-              width: MediaQuery.of(context).size.width / 1,
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.width / 7,
-            child: AnimatedTextKit(
-              animatedTexts: [
-                ColorizeAnimatedText(
-                  title,
-                  speed: Duration(milliseconds: 700),
-                  textStyle:
-                      GoogleFonts.almendraSc(textStyle: colorizeTextStyle),
-                  colors: colorizeColors,
-                ),
-                ColorizeAnimatedText(
-                  title,
-                  speed: Duration(milliseconds: 700),
-                  textStyle:
-                      GoogleFonts.almendraSc(textStyle: colorizeTextStyle),
-                  colors: colorizeColors,
-                ),
-                ColorizeAnimatedText(
-                  title,
-                  speed: Duration(milliseconds: 700),
-                  textStyle:
-                      GoogleFonts.almendraSc(textStyle: colorizeTextStyle),
-                  colors: colorizeColors,
-                ),
-              ],
-              isRepeatingAnimation: true,
-              onTap: () {},
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height / 4,
-            child: Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.height / 10,
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width / 15,
-                top: MediaQuery.of(context).size.height / 70,
-                bottom: MediaQuery.of(context).size.height / 65,
-                right: MediaQuery.of(context).size.width / 15,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(35),
-                color: Theme.of(context).backgroundColor,
-              ),
-              child: DefaultTextStyle(
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).dialogBackgroundColor,
-                  fontSize: 20.0,
-                  fontFamily: 'Agne',
-                ),
-                child: AnimatedTextKit(
-                  totalRepeatCount: 1,
-                  onFinished: () {
-                    print('El contador es $contador');
-                    if (contador != 4) {
-                      controller.animateToPage(contador + 1,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeIn);
-                      //controller.jumpToPage(contador + 1);
-                    }
-                  },
-                  pause: Duration(milliseconds: 5000),
-                  isRepeatingAnimation: true,
-                  repeatForever: false,
-                  animatedTexts: frases,
-                  onTap: () {},
-                ),
-              ),
-            ),
-          )
-          // Center(
-          //   child:
-          //   // child: DefaultTextStyle(
-          //   style: const TextStyle(
-          //     fontSize: 30.0,
-          //     fontFamily: 'Agne',
-          //   ),
-          //   child: AnimatedTextKit(
-          //     animatedTexts: [
-          //       TypewriterAnimatedText(title),
-          //       TypewriterAnimatedText(title),
-          //       TypewriterAnimatedText(
-          //           'Do not patch bugs out, rewrite them'),
-          //       TypewriterAnimatedText(
-          //           'Do not test bugs out, design them out'),
-          //     ],
-          //     onTap: () {
-          //       print("Tap Event");
-          //     },
-          //   ),
-          // ),
-          // child: AnimatedTextKit(
-          //   animatedTexts: [TyperAnimatedText(title)],
-          // ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     ThemeProvider tema = Provider.of<ThemeProvider>(context);
+
+    Widget buildPage({
+      required Color color,
+      required String urlImage,
+      required String backgroundImage,
+      required String title,
+      required String subtitle,
+      required List<AnimatedText> frases,
+    }) {
+      return Container(
+        decoration: BoxDecoration(
+          color: color,
+          image: DecorationImage(
+            image: AssetImage(backgroundImage),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              top: MediaQuery.of(context).size.width / 1.5,
+              child: Image.asset(
+                urlImage,
+                width: MediaQuery.of(context).size.width / 1,
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.width / 7,
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  ColorizeAnimatedText(
+                    title,
+                    speed: Duration(milliseconds: 700),
+                    textStyle:
+                        GoogleFonts.almendraSc(textStyle: colorizeTextStyle),
+                    colors: colorizeColors,
+                  ),
+                  ColorizeAnimatedText(
+                    title,
+                    speed: Duration(milliseconds: 700),
+                    textStyle:
+                        GoogleFonts.almendraSc(textStyle: colorizeTextStyle),
+                    colors: colorizeColors,
+                  ),
+                  ColorizeAnimatedText(
+                    title,
+                    speed: Duration(milliseconds: 700),
+                    textStyle:
+                        GoogleFonts.almendraSc(textStyle: colorizeTextStyle),
+                    colors: colorizeColors,
+                  ),
+                ],
+                isRepeatingAnimation: true,
+                onTap: () {},
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height / 4,
+              child: Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width / 1.2,
+                height: MediaQuery.of(context).size.height / 10,
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 15,
+                  top: MediaQuery.of(context).size.height / 70,
+                  bottom: MediaQuery.of(context).size.height / 65,
+                  right: MediaQuery.of(context).size.width / 15,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(35),
+                  color: Theme.of(context).backgroundColor,
+                ),
+                child: DefaultTextStyle(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).dialogBackgroundColor,
+                    fontSize: 20.0,
+                    fontFamily: 'Agne',
+                  ),
+                  child: AnimatedTextKit(
+                    totalRepeatCount: 1,
+                    onFinished: () {
+                      print('El contador es $contador');
+                      if (contador != 4) {
+                        controller.animateToPage(contador + 1,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.easeIn);
+                        //controller.jumpToPage(contador + 1);
+                      }
+                    },
+                    pause: Duration(milliseconds: 5000),
+                    isRepeatingAnimation: true,
+                    repeatForever: false,
+                    animatedTexts: frases,
+                    onTap: () {},
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height / 6,
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      tema.sethemeData(temaDia());
+                    },
+                    child: Text(''),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      tema.sethemeData(temaNoche());
+                    },
+                    child: Text(''),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 75, 17, 5),
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      tema.sethemeData(temaCalido());
+                    },
+                    child: Text(''),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purple,
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      tema.sethemeData(temaAmarillo());
+                    },
+                    child: Text(''),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 210, 229, 34),
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      tema.sethemeData(temaAzul());
+                    },
+                    child: Text(''),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 50, 26, 231),
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            )
+            // Center(
+            //   child:
+            //   // child: DefaultTextStyle(
+            //   style: const TextStyle(
+            //     fontSize: 30.0,
+            //     fontFamily: 'Agne',
+            //   ),
+            //   child: AnimatedTextKit(
+            //     animatedTexts: [
+            //       TypewriterAnimatedText(title),
+            //       TypewriterAnimatedText(title),
+            //       TypewriterAnimatedText(
+            //           'Do not patch bugs out, rewrite them'),
+            //       TypewriterAnimatedText(
+            //           'Do not test bugs out, design them out'),
+            //     ],
+            //     onTap: () {
+            //       print("Tap Event");
+            //     },
+            //   ),
+            // ),
+            // child: AnimatedTextKit(
+            //   animatedTexts: [TyperAnimatedText(title)],
+            // ),
+          ],
+        ),
+      );
+    }
 
     //Theme.of(context).backgroundColor,tema.sethemeData(temaNoche());
     return Scaffold(
