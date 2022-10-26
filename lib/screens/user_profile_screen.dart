@@ -68,17 +68,38 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   void dialogMethod() {
     _sb = SimpleDialog(
-      title: Text('Elige una nueva Foto'),
+      title: Text(
+        'Elige una nueva Foto',
+        style: TextStyle(color: Theme.of(context).backgroundColor),
+      ),
       children: [
         SimpleDialogOption(
-          child: Text('Elegir de Galeria'),
+          child: ListTile(
+            title: Text(
+              'Elegir una imagen',
+              style: TextStyle(color: Theme.of(context).backgroundColor),
+            ),
+            trailing: Icon(
+              Icons.folder,
+              color: Theme.of(context).backgroundColor,
+            ),
+          ),
           onPressed: () {
             getImage(ImageSource.gallery);
             Navigator.pop(context);
           },
         ),
         SimpleDialogOption(
-          child: Text('Tomar Foto'),
+          child: ListTile(
+            title: Text(
+              'Tomar Foto',
+              style: TextStyle(color: Theme.of(context).backgroundColor),
+            ),
+            trailing: Icon(
+              Icons.camera_alt,
+              color: Theme.of(context).backgroundColor,
+            ),
+          ),
           onPressed: () {
             getImage(ImageSource.camera);
             Navigator.pop(context);
@@ -102,7 +123,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   bool verifyTheme = false;
   @override
   Widget build(BuildContext context) {
-    ThemeProvider tema = Provider.of<ThemeProvider>(context);
+    ThemeProvider tema = Provider.of<ThemeProvider>(context, listen: false);
     final urlAsset = 'assets/ProfilePicture.png';
     //PARA GUARDAR LA PRIMERA IMAGEN
     // photo pic = photo(0, urlAsset);

@@ -43,6 +43,12 @@ dependencies:
   animated_text_kit: ^4.2.2
   google_fonts: ^3.0.1
   google_maps_flutter: ^2.2.1
+  firebase_core: ^1.24.0
+  firebase_auth: ^3.11.2
+  flutter_rating_bar: ^4.0.1
+  readmore: ^2.2.0
+  carousel_slider: ^4.1.1
+  video_player: ^2.4.7
   
 
 dev_dependencies:

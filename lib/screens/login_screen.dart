@@ -166,6 +166,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ]),
               ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.width / 1.8,
+              child: TextButton(
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pushNamed(context, '/signup'),
+              ),
             )
           ],
         ),

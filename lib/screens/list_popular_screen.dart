@@ -71,6 +71,7 @@ class _ListPopularScreenState extends State<ListPopularScreen> {
                 height: 60,
                 child: ListTile(
                   onTap: () {
+                    print(snapshot[index]);
                     Navigator.pushNamed(context, '/moviesDetail',
                         arguments: snapshot[index]);
                   },

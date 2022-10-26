@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/about_us_screen.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_application_1/screens/listTask_screen.dart';
 import 'package:flutter_application_1/screens/list_popular_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/onboarding_screen.dart';
+import 'package:flutter_application_1/screens/popular_movies/favorite_movies_screen.dart';
 import 'package:flutter_application_1/screens/popular_movies/popular_details_screen.dart';
+import 'package:flutter_application_1/screens/sign_up_screen.dart';
 import 'package:flutter_application_1/screens/splash_screen.dart';
 import 'package:flutter_application_1/screens/task_screen.dart';
 import 'package:flutter_application_1/screens/user_profile_screen.dart';
@@ -17,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   final prefs = await SharedPreferences.getInstance();
   final int? counter = prefs.getInt('numTema');
   final int variable = counter != null ? counter : 1;
@@ -51,6 +55,8 @@ class PMSNApp extends StatelessWidget {
         '/list': (BuildContext context) => ListPopularScreen(),
         '/moviesDetail': (BuildContext context) => PopularDetailScreen(),
         '/about': (BuildContext context) => AboutUsScreen(),
+        '/signup': (BuildContext context) => SignUpScreen(),
+        '/favoritesMovies': (BuildContext context) => FavoritesMoviesScreen(),
       },
     );
   }

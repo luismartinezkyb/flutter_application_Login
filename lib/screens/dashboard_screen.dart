@@ -270,28 +270,36 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
               onTap: () {
                 Navigator.pushNamed(context, '/about');
               },
-            ),
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: ListTile(
-                  leading: Image.asset(
-                    'assets/pokebola2.png',
-                    width: 40,
-                    height: 40,
-                  ),
-                  trailing: Icon(Icons.close),
-                  title: Text('Log out'),
-                  onTap: () {
-                    removeMethod();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/login', (route) => false);
-                    //Navigator.pushNamedAndRemoveUntil(context, (route) => ModalRoute('/login'));
-                    //Navigator.pushNamed(context, '/login');
-                  },
-                ),
+            ), //favoritesMovies
+            ListTile(
+              leading: Image.asset(
+                'assets/pokebola2.png',
+                width: 40,
+                height: 40,
               ),
+              trailing: Icon(Icons.star_rounded),
+              title: Text('Peliculas Favs'),
+              onTap: () {
+                Navigator.pushNamed(context, '/favoritesMovies');
+              },
             ),
+            ListTile(
+              leading: Image.asset(
+                'assets/pokebola2.png',
+                width: 40,
+                height: 40,
+              ),
+              trailing: Icon(Icons.close),
+              title: Text('Log out'),
+              onTap: () {
+                removeMethod();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', (route) => false);
+                //Navigator.pushNamedAndRemoveUntil(context, (route) => ModalRoute('/login'));
+                //Navigator.pushNamed(context, '/login');
+              },
+            ),
+
             // ListTile(
             //   leading: Image.asset(
             //     'assets/pokebola2.png',
