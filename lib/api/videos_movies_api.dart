@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class VideosMoviesApi {
   final dominioUrl = 'https://api.themoviedb.org/3/movie/';
   final keyUrl =
-      '/videos?api_key=296e298be8c968bec1cc19a88801cb0a&language=es-MX';
+      '/videos?api_key=296e298be8c968bec1cc19a88801cb0a&language=en-US';
 
   // var url = Uri.https('example.com', 'whatsit/create');
   // var response = await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
@@ -16,11 +16,17 @@ class VideosMoviesApi {
   // print(await http.read(Uri.https('example.com', 'foobar.txt')));
   Future<List?> getAllVideos(String url) async {
     final result = '$dominioUrl$url$keyUrl';
-    print('EL URL A BUSCAR ES $result');
+    //print('EL URL A BUSCAR ES $result');
     final response = await http
         .get(Uri.parse(result)); //we need to convert the url to a uri datatype
     if (response.statusCode == 200) {
       var popular = jsonDecode(response.body)['results'] as List;
+      //print('The size of the result is ${popular.length}');
+      if (popular.length != 0) {
+        return popular
+            .where((element) => element['type'] == 'Trailer')
+            .toList();
+      }
       return popular;
       // List<PopularModel> listPopular =
       //     popular.map((movie) => PopularModel.fromJSON(movie)).toList();

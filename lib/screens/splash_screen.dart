@@ -3,6 +3,7 @@ import 'package:flutter_application_1/screens/counter_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/onboarding_screen.dart';
+import 'package:flutter_application_1/screens/video_prueba.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 
@@ -72,7 +73,7 @@ class _SplashScreen2State extends State<SplashScreen2> {
 
   Widget newNavigate() {
     if (verifyUser) {
-      return OnboardingPage();
+      return DashBoardScreen2();
     } else {
       return LoginScreen();
     }

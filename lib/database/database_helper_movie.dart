@@ -51,7 +51,7 @@ class DatabaseHelperMovie {
   }
 
   Future<int> deleteMovie(int idMovie) async {
-    print('SE HA BORRADO LA PEICULA CON EL ID : $idMovie');
+    //print('SE HA BORRADO LA PEICULA CON EL ID : $idMovie');
     var connection = await database;
     return await connection!
         .delete(TABLE, where: 'id = ?', whereArgs: [idMovie]);
@@ -60,7 +60,7 @@ class DatabaseHelperMovie {
   Future<List<PopularModel>> getAllFavoritesMovies() async {
     var connection = await database;
     var result = await connection!.query(TABLE);
-    print('TODAS LAS PELICULAS SON $result');
+    //print('TODAS LAS PELICULAS SON $result');
     return result.map((mapMovie) => PopularModel.fromJSON(mapMovie)).toList();
   }
 
@@ -69,7 +69,7 @@ class DatabaseHelperMovie {
     var connection = await database;
     var result =
         await connection!.query(TABLE, where: 'id=?', whereArgs: [idMovie]);
-    print('La pelicula arrojada es $result');
+    //print('La pelicula arrojada es $result');
     return result;
   }
 

@@ -2,13 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_application_1/api/cast_movies_api.dart';
 import 'package:flutter_application_1/api/videos_movies_api.dart';
 import 'package:flutter_application_1/database/database_helper_movie.dart';
 import 'package:flutter_application_1/models/popular_mode.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
-import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
 //import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class PopularDetailScreen extends StatefulWidget {
@@ -23,6 +25,7 @@ class _PopularDetailScreenState extends State<PopularDetailScreen> {
   //late YoutubePlayerController controllerVideo;
   PopularModel? popularModel;
   VideosMoviesApi videosApi = VideosMoviesApi();
+  CastMoviesApi castApi = CastMoviesApi();
   DatabaseHelperMovie? _database;
   bool favorite = false;
 
@@ -113,16 +116,138 @@ class _PopularDetailScreenState extends State<PopularDetailScreen> {
       future: videosApi.getAllVideos('${popularModel!.id}'),
       builder: (BuildContext context, AsyncSnapshot<List?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          print('el tipo de dato es: ${snapshot.data.runtimeType}');
-          return CarouselSlider.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder:
-                (BuildContext context, int itemIndex, int pageViewIndex) =>
-                    Container(
-              child: Text('${snapshot.data![itemIndex]['key']}'),
-            ),
-            options: CarouselOptions(height: 200.0),
+          if (snapshot.data!.length != 0) {
+            //print('el tipo de dato es: ${snapshot.data!.runtimeType}');
+            // snapshot.data!.forEach((element) {
+            //   if ('${element['type']}' == 'Trailer') {
+            //     print('There is a trailer ');
+            //   }
+            // });
+            //) {}
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: CarouselSlider.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder:
+                    (BuildContext context, int itemIndex, int pageViewIndex) =>
+                        Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                  ),
+                  alignment: Alignment.center,
+                  child: YoutubePlayer(
+                      controller: YoutubePlayerController(
+                        initialVideoId: '${snapshot.data![itemIndex]['key']}',
+                        flags: YoutubePlayerFlags(autoPlay: false, mute: false),
+                      ),
+                      showVideoProgressIndicator: true),
+                ),
+                options: CarouselOptions(
+                  height: 300.0,
+                  enableInfiniteScroll: false,
+                  viewportFraction: 1.0,
+                  enlargeCenterPage: false,
+                ),
+              ),
+            );
+          } else {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Text('This Movie has not trailer yet, come back later',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.red)),
+            );
+          }
+          //return CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          print('has an error');
+          return Center(
+            child: Text('OCURRIO UN ERROR EN LA PETICION'),
           );
+        }
+        print('error');
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    // final http://www.gravatar.com/avatar/?d=mp
+    final cast = FutureBuilder(
+      future: castApi.getAllCast('${popularModel!.id}'),
+      builder: (BuildContext context, AsyncSnapshot<List?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data!.length != 0) {
+            //print('EL TAMAÑO DEL DATO ES ${snapshot.data!.length}');
+
+            return Container(
+              padding: EdgeInsets.only(left: 20),
+              height: 300,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 180,
+                    padding: EdgeInsets.only(right: 20, top: 20),
+                    child: Column(
+                      children: [
+                        ClipOval(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Image.network(
+                                snapshot.data![index]['profile_path'] == null
+                                    ? 'http://www.gravatar.com/avatar/?d=mp'
+                                    : 'https://image.tmdb.org/t/p/w500/${snapshot.data![index]['profile_path']}',
+                                fit: BoxFit.cover,
+                                width: 120,
+                                height: 120,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          '${snapshot.data![index]['name']}',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('AS'),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Center(
+                          child: Text(
+                            '${snapshot.data![index]['character']}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          } else {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Text('This movie has not cast yet, come back later',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.red)),
+            );
+          }
           //return CircularProgressIndicator();
         }
         if (snapshot.hasError) {
@@ -144,9 +269,9 @@ class _PopularDetailScreenState extends State<PopularDetailScreen> {
           child: Icon(Icons.arrow_back),
           onTap: () {
             // Navigator.popUntil(context, (route) => false)
-            // Navigator.pop(context, 'newData');
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/list', (route) => false);
+            Navigator.pop(context, 'newData');
+            // Navigator.pushNamedAndRemoveUntil(
+            //     context, '/list', (route) => false);
           },
         ),
         title: Text('${popularModel!.title}'),
@@ -266,22 +391,29 @@ class _PopularDetailScreenState extends State<PopularDetailScreen> {
               SizedBox(
                 height: 20,
               ),
-              ReadMoreText(
-                '${popularModel!.overview}',
-                style: TextStyle(fontStyle: FontStyle.italic),
-                trimLines: 3,
-                lessStyle: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple),
-                trimMode: TrimMode.Line,
-                trimCollapsedText: 'Read more',
-                trimExpandedText: 'Show less',
-                moreStyle: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple),
-              ),
+              popularModel!.overview!.length == 0
+                  ? Center(
+                      child: Text('There is not an overview yet!',
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)))
+                  : ReadMoreText(
+                      '${popularModel!.overview}',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      trimLines: 3,
+                      lessStyle: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple),
+                      trimMode: TrimMode.Line,
+                      trimCollapsedText: 'Read more',
+                      trimExpandedText: 'Show less',
+                      moreStyle: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple),
+                    ),
               SizedBox(
                 height: 10,
               ),
@@ -289,56 +421,49 @@ class _PopularDetailScreenState extends State<PopularDetailScreen> {
               SizedBox(
                 height: 10,
               ),
-              Center(
-                child: Text(
-                  'Trailer',
-                  style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  )),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-
-              // CarouselSlider(
-              //   options: CarouselOptions(height: 400.0),
-              //   items: [1, 2, 3, 4, 5].map((i) {
-              //     return Builder(
-              //       builder: (BuildContext context) {
-              //         return Container(
-              //             width: MediaQuery.of(context).size.width,
-              //             margin: EdgeInsets.symmetric(horizontal: 5.0),
-              //             decoration: BoxDecoration(color: Colors.amber),
-              //             child: Text(
-              //               'text $i',
-              //               style: TextStyle(fontSize: 16.0),
-              //             ));
-              //       },
-              //     );
-              //   }).toList(),
-              // ),
             ],
           ),
         ),
-        videos,
+        Container(
+          padding: EdgeInsets.only(top: 20),
+          color: Colors.blueGrey,
+          child: Center(
+            child: Text(
+              'Trailers',
+              style: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              )),
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 0),
+          child: videos,
+        ),
         SizedBox(height: 30),
+        Divider(),
+        Container(
+          padding: EdgeInsets.all(19),
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Cast & Crew:',
+                style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                )),
+              )
+            ],
+          ),
+        ),
+        cast
       ]),
     );
   }
 }
-
-// YoutubePlayerBuilder(
-//                 builder: (context, player) => Center(
-//                   child: player,
-//                 ),
-//                 player: YoutubePlayer(
-//                   showVideoProgressIndicator: true,
-//                   controller: YoutubePlayerController(
-//                     initialVideoId: 'r2vFOkemOaY',
-//                     flags: YoutubePlayerFlags(loop: false, autoPlay: false),
-//                   ),
-//                 ),
-//               ),

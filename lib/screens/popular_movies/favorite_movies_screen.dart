@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_application_1/database/database_helper_movie.dart';
 import 'package:flutter_application_1/models/popular_mode.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FavoritesMoviesScreen extends StatefulWidget {
   const FavoritesMoviesScreen({Key? key}) : super(key: key);
@@ -39,7 +40,57 @@ class _FavoritesMoviesScreenState extends State<FavoritesMoviesScreen> {
       body: FutureBuilder(
         future: _database!.getAllFavoritesMovies(),
         builder: (context, AsyncSnapshot<List<PopularModel>> snapshot) {
-          if (snapshot.hasData)
+          if (snapshot.hasData) {
+            print('THE TOTAL OF MOVIES FAVS ARE : ${snapshot.data!.length}');
+
+            if (snapshot.data!.length != 0) {
+              return ListView.separated(
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider();
+                },
+                padding: EdgeInsets.all(10),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Stack(alignment: Alignment.bottomCenter, children: [
+                      FadeInImage(
+                        image: NetworkImage(
+                            'https://image.tmdb.org/t/p/w500/${snapshot.data![index].backdropPath!}'),
+                        placeholder: AssetImage('assets/loading.gif'),
+                        fadeInDuration: Duration(milliseconds: 500),
+                      ),
+                      Container(
+                          alignment: Alignment.center,
+                          color: Colors.black.withOpacity(.6),
+                          height: 60,
+                          child: ListTile(
+                            onTap: () async {
+                              final data = await Navigator.pushNamed(
+                                  context, '/moviesDetail',
+                                  arguments: snapshot.data![index]);
+                              print('the data que me regresa es: $data');
+                              setState(() {
+                                build(context);
+                              });
+                            },
+                            trailing: Icon(
+                              Icons.chevron_right,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              snapshot.data![index].title!,
+                              style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                      fontSize: 20.0, color: Colors.white)),
+                            ),
+                          )),
+                    ]),
+                  );
+                },
+              );
+            }
+            // if()
             return ListView.builder(
                 itemBuilder: (context, index) {
                   return Container(
@@ -68,7 +119,7 @@ class _FavoritesMoviesScreenState extends State<FavoritesMoviesScreen> {
                       ));
                 },
                 itemCount: snapshot.data!.length);
-          else if (snapshot.hasError)
+          } else if (snapshot.hasError)
             return Center(child: Text('Occurio un errror en la peticion...'));
           return CircularProgressIndicator();
         },
