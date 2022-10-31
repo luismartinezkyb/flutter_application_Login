@@ -265,24 +265,34 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 width: 40,
                 height: 40,
               ),
-              trailing: Icon(Icons.settings),
-              title: Text('About us'),
+              trailing: Icon(Icons.star_rounded),
+              title: Text('Favorite Movies'),
               onTap: () {
-                Navigator.pushNamed(context, '/about');
+                Navigator.pushNamed(context, '/favoritesMovies');
               },
-            ), //favoritesMovies
+            ),
+            ListTile(
+              leading:
+                  Image.asset('assets/pokebola2.png', width: 40, height: 40),
+              trailing: Icon(Icons.list_alt_rounded),
+              title: Text('Pokedex'),
+              onTap: () {
+                Navigator.pushNamed(context, '/pokedex');
+              },
+            ),
             ListTile(
               leading: Image.asset(
                 'assets/pokebola2.png',
                 width: 40,
                 height: 40,
               ),
-              trailing: Icon(Icons.star_rounded),
-              title: Text('Peliculas Favs'),
+              trailing: Icon(Icons.settings),
+              title: Text('About us'),
               onTap: () {
-                Navigator.pushNamed(context, '/favoritesMovies');
+                Navigator.pushNamed(context, '/about');
               },
-            ),
+            ), //favoritesMovies
+
             ListTile(
               leading: Image.asset(
                 'assets/pokebola2.png',

@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //       ? txtConUser.text = 'DEFAULT_USER'
                   //       : '';
                   // });
-                  Navigator.pushNamed(context, '/dash', arguments: {
+                  Navigator.pushNamed(context, '/onboardingPage', arguments: {
                     "username": txtConUser.text,
                     "password": txtConPwd.text
                   });

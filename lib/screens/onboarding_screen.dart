@@ -20,6 +20,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int contador = 0;
   final controller = PageController();
   bool isLastPage = false;
+  String username = '';
+  String password = '';
 
   @override
   void dispose() {
@@ -43,6 +45,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider tema = Provider.of<ThemeProvider>(context);
+
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+
+    if (arguments.isEmpty || arguments['username'].isEmpty) {
+      username = "";
+      password = "";
+    } else {
+      username = arguments['username'];
+      password = arguments['username'].replaceAll(' ', '') + '@gmail.com';
+    }
 
     Widget buildPage({
       required Color color,
@@ -370,7 +383,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 leading: Image.asset('assets/pokebola2.png'),
               ),
               onPressed: () async {
-                Navigator.pushNamed(context, '/dash');
+                Navigator.pushNamed(context, '/dash',
+                    arguments: {"username": username, "password": password});
               },
             )
           : Container(

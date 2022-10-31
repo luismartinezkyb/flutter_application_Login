@@ -265,6 +265,7 @@ class _PopularDetailScreenState extends State<PopularDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: GestureDetector(
           child: Icon(Icons.arrow_back),
           onTap: () {

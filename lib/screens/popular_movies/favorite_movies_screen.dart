@@ -26,7 +26,8 @@ class _FavoritesMoviesScreenState extends State<FavoritesMoviesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your favorites movies'),
+        backgroundColor: Theme.of(context).backgroundColor,
+        title: Text('Your favorite movies'),
         leading: GestureDetector(
           child: Icon(Icons.arrow_back),
           onTap: () {

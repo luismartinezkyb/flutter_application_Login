@@ -19,6 +19,7 @@ class _ListPopularScreenState extends State<ListPopularScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: GestureDetector(
           child: Icon(Icons.arrow_back),
           onTap: () {

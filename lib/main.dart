@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/about_us_screen.dart';
+import 'package:flutter_application_1/screens/apiPokemon/details_pokemon_screen.dart';
+import 'package:flutter_application_1/screens/apiPokemon/list_all_pokes_screen.dart';
 import 'package:flutter_application_1/screens/counter_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/edit_profile_screen.dart';
@@ -57,6 +59,8 @@ class PMSNApp extends StatelessWidget {
         '/about': (BuildContext context) => AboutUsScreen(),
         '/signup': (BuildContext context) => SignUpScreen(),
         '/favoritesMovies': (BuildContext context) => FavoritesMoviesScreen(),
+        '/pokedex': (BuildContext context) => AllPokemonScreen(),
+        '/detailPokemon': (BuildContext context) => DetailPokemonScreen()
       },
     );
   }

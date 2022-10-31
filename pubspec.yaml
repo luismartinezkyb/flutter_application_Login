@@ -49,6 +49,7 @@ dependencies:
   readmore: ^2.2.0
   carousel_slider: ^4.1.1
   youtube_player_flutter: ^8.1.1
+  cached_network_image: ^3.2.1
   
 
 dev_dependencies:
