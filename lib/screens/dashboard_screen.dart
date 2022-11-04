@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database_helper_photo.dart';
+import '../models/photo_model.dart';
 import '../settings/styles_settings.dart';
 
 /////***//***//***//***//***//***//
@@ -62,17 +63,30 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider tema = Provider.of<ThemeProvider>(context);
-
+    final urlAsset = 'assets/ProfilePicture.png';
+    //PARA GUARDAR LA PRIMERA IMAGEN
+    // photo pic = photo(0, urlAsset);
+    // _database!.save(pic);
     final futuro = FutureBuilder(
       future: _database!.getPic(1),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
+          print('AQUI VA EL SI HAS DATA ${snapshot.data![0]['photoName']}');
+          if (snapshot.data![0]['photoName'] != null) {
+            //PARA CUANDO VAYAMOS INICIANDO SESIOn
+            // return CircleAvatar(
+            //     backgroundImage: AssetImage('assets/ProfilePicture.png'));
+            return CircleAvatar(
+              backgroundImage: FileImage(File(snapshot.data![0]['photoName'])),
+            );
+          } else {
+            return CircleAvatar(
+                backgroundImage: AssetImage('assets/ProfilePicture.png'));
+          }
           //FileImage(File(snapshot.data![0]['photoName']))
           //print(
           //  'SI HAY UNA IMAGEN GUARDADA Y ES ${snapshot.data![0]['photoName']}');
-          return CircleAvatar(
-            backgroundImage: FileImage(File(snapshot.data![0]['photoName'])),
-          );
+
         }
         if (snapshot.hasError) {
           print('HAY UN ERROR EN LA IMAGEN');

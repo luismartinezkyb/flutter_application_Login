@@ -167,6 +167,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       future: _database!.getPic(1),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
+          //primero comentamos el futuro 2 y luego agregamos las lineas de arriba, aqui podriamos crear un
+          //gesture detector con un Image.asset y un string como el del dashboard
+          print(
+              'Checamos que es lo que tiene ${snapshot.data![0]['photoName']}');
+
           imageUsuario = snapshot.data![0]['photoName'];
           print('el path ess $imageUsuario');
           return GestureDetector(

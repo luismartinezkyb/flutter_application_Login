@@ -76,8 +76,12 @@ class _AllPokemonScreenState extends State<AllPokemonScreen> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/detailPokemon',
-                  arguments: snapshot[index]);
+              Navigator.pushNamed(context, '/pageViewPoke', arguments: {
+                "numeroPoke": snapshot[index].id,
+                "type": snapshot[index].type![0].toLowerCase()
+              });
+              // Navigator.pushNamed(context, '/detailPokemon',
+              //     arguments: snapshot[index]);
               print('${snapshot[index].id}');
             },
             child: Card(

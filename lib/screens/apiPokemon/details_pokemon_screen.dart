@@ -43,27 +43,41 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen> {
     pokemonModel = ModalRoute.of(context)?.settings.arguments as PokemonModel;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(
+            int.parse('${colours[pokemonModel!.type![0].toLowerCase()]}')),
+        title: Text('Pokemon Info'),
+        leading: GestureDetector(
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onTap: () {
+            Navigator.pop(context, 'newData');
+          },
+        ),
+      ),
       backgroundColor:
           Color(int.parse('${colours[pokemonModel!.type![0].toLowerCase()]}')),
       body: Stack(
         children: [
           //Arrow Button
-          Positioned(
-            top: 45,
-            left: 1,
-            child: IconButton(
-              iconSize: 30,
-              icon: Icon(Icons.arrow_back),
-              color: Colors.white,
-              onPressed: () {
-                Navigator.pop(context, 'newData');
-              },
-            ),
-          ),
+          // Positioned(
+          //   top: 45,
+          //   left: 1,
+          //   child: IconButton(
+          //     iconSize: 30,
+          //     icon: Icon(Icons.arrow_back),
+          //     color: Colors.white,
+          //     onPressed: () {
+          //       Navigator.pop(context, 'newData');
+          //     },
+          //   ),
+          // ),
           //NAME POSITIONED
           Positioned(
-              top: 90,
-              left: 30,
+              top: 30,
+              left: 20,
               child: Text(
                 '${pokemonModel!.name}',
                 style: GoogleFonts.lato(
@@ -75,7 +89,7 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen> {
           //FONDO POKEBALL
           //height / 6,
           Positioned(
-            top: height / 6,
+            top: height / 10,
             right: -130,
             child: Image.asset(
               'assets/pokeball_pokedex_api.png',
@@ -317,7 +331,7 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen> {
           //SHINY https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemonModel!.id}.png
           //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonModel!.id}.png
           Positioned(
-            top: height / 6,
+            top: height / 12,
             left: width / 2.6,
             child: Hero(
               tag: '${pokemonModel!.name}',
@@ -336,7 +350,7 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen> {
           //TYPES
           pokemonModel!.type!.length == 2
               ? Positioned(
-                  top: 140,
+                  top: 80,
                   left: 20,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,7 +409,7 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen> {
                   ),
                 )
               : Positioned(
-                  top: 140,
+                  top: 80,
                   left: 20,
                   child: Container(
                     decoration: BoxDecoration(
