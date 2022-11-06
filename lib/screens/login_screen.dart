@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
+
+import '../firebase/email_authentication.dart';
 //import 'package:social_login_buttons/social_login_buttons.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,6 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool newSwitch = false;
   TextEditingController txtConUser = TextEditingController();
   TextEditingController txtConPwd = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final EmailAuthentication _emailAuth = EmailAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -119,22 +124,34 @@ class _LoginScreenState extends State<LoginScreen> {
               // right: MediaQuery.of(context).size.width / 3,
               bottom: MediaQuery.of(context).size.height / 4.1,
               child: GestureDetector(
-                onTap: () {
-                  print(newSwitch);
+                onTap: () async {
+                  print('NEW SWITCH $newSwitch');
                   if (newSwitch) {
                     sharedMethod();
                   } else {
                     removeMethod();
                   }
+                  var ban = await _emailAuth.signInWithEmailAndPassword(
+                      email: txtConUser.text, password: txtConPwd.text);
+                  if (ban == true) {
+                    if (_auth.currentUser!.emailVerified) {
+                      Navigator.pushNamed(context, '/onboardingPage',
+                          arguments: {
+                            "username": txtConUser.text,
+                            "password": txtConPwd.text
+                          });
+                    } else
+                      print('Usuario no validado');
+                  } else {
+                    print('Credenciales invalidas');
+                  }
+
                   // setState(() {
                   //   txtConUser.text.isEmpty
                   //       ? txtConUser.text = 'DEFAULT_USER'
                   //       : '';
                   // });
-                  Navigator.pushNamed(context, '/onboardingPage', arguments: {
-                    "username": txtConUser.text,
-                    "password": txtConPwd.text
-                  });
+
                   //MaterialPageRoute(builder: (context) {}));
                 },
                 child: Image.asset(

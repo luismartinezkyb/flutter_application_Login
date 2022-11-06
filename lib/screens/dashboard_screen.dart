@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/theme_screen.dart';
@@ -30,6 +31,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   String nameUser = '';
   bool checkPhoto = true;
   int numTema = 1;
+  final userFirebase = FirebaseAuth.instance.currentUser!;
 //METHODS SHARED ETC
 //METHODS OF SHARED PREFERENCES
   void sharedMethod() async {
@@ -41,7 +43,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
         usernamePref = users[0];
         pwdPref = users[1];
       });
-      print('Successfully');
+      //print('Successfully');
     }
   }
 
@@ -63,6 +65,8 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider tema = Provider.of<ThemeProvider>(context);
+
+    print('USUARIO FIREBASE: ${userFirebase.displayName}');
     final urlAsset = 'assets/ProfilePicture.png';
     //PARA GUARDAR LA PRIMERA IMAGEN
     // photo pic = photo(0, urlAsset);
@@ -71,7 +75,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       future: _database!.getPic(1),
       builder: (context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
-          print('AQUI VA EL SI HAS DATA ${snapshot.data![0]['photoName']}');
+          //print('AQUI VA EL SI HAS DATA ${snapshot.data![0]['photoName']}');
           if (snapshot.data![0]['photoName'] != null) {
             //PARA CUANDO VAYAMOS INICIANDO SESIOn
             // return CircleAvatar(
@@ -103,21 +107,24 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
 
-    if (usernamePref == '') {
-      if (arguments.isEmpty || arguments['username'].isEmpty) {
-        nameUser = 'DEFAULT_USER';
-        email = 'example@mail.com';
-      } else {
-        setState(() {
-          checkPhoto = false;
-        });
-        nameUser = arguments['username'];
-        email = arguments['username'].replaceAll(' ', '') + '@gmail.com';
-      }
-    } else {
-      nameUser = usernamePref;
-      email = usernamePref.replaceAll(' ', '') + '@gmail.com';
-    }
+    nameUser = userFirebase.displayName!;
+    email = userFirebase.email!;
+    //Lo siguiente era para saber si es que se podría utilizar el arguments y las preferencias compartidas
+    // if (usernamePref == '') {
+    //   if (arguments.isEmpty || arguments['username'].isEmpty) {
+    //     nameUser = 'DEFAULT_USER';
+    //     email = 'example@mail.com';
+    //   } else {
+    //     setState(() {
+    //       checkPhoto = false;
+    //     });
+    //     nameUser = arguments['username'];
+    //     email = arguments['username'].replaceAll(' ', '');
+    //   }
+    // } else {
+    //   nameUser = usernamePref;
+    //   email = usernamePref.replaceAll(' ', '') + '@gmail.com';
+    // }
 
     Widget ColorWidgetRow() {
       return Row(
@@ -176,6 +183,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       );
     }
 
+    //print('EL NOMBRE DEL USUARIO ES $nameUser');
     return Scaffold(
       appBar: AppBar(
         title: Text('Bienvenido ${nameUser}'),
@@ -316,6 +324,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
               trailing: Icon(Icons.close),
               title: Text('Log out'),
               onTap: () {
+                FirebaseAuth.instance.signOut();
                 removeMethod();
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/login', (route) => false);
@@ -358,6 +367,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 ElevatedButton(
                   onPressed: () {
                     removeMethod();
+                    FirebaseAuth.instance.signOut();
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/login', (route) => false);
                   },

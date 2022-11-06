@@ -16,7 +16,9 @@ class PageViewPokemonScreen extends StatefulWidget {
   State<PageViewPokemonScreen> createState() => _PageViewPokemonScreenState();
 }
 
-class _PageViewPokemonScreenState extends State<PageViewPokemonScreen> {
+class _PageViewPokemonScreenState extends State<PageViewPokemonScreen>
+    with TickerProviderStateMixin {
+  late TabController _tcontrol;
   PokemonListApi pokemonApi = PokemonListApi();
   int numeroPoke = 0;
   String colorFondo = 'normal';
@@ -41,6 +43,11 @@ class _PageViewPokemonScreenState extends State<PageViewPokemonScreen> {
     "steel": '0xFFB7B7CE',
     "fairy": '0xFFD685AD',
   };
+  @override
+  void initState() {
+    super.initState();
+    _tcontrol = TabController(vsync: this, length: 2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,20 +99,6 @@ class _PageViewPokemonScreenState extends State<PageViewPokemonScreen> {
         },
         itemBuilder: (context, index) {
           return Scaffold(
-              // appBar: AppBar(
-              //   backgroundColor: Color(int.parse(
-              //       '${colours[snapshot[index].type![0].toLowerCase()]}')),
-              //   title: Text('Pokemon Info'),
-              //   leading: GestureDetector(
-              //     child: Icon(
-              //       Icons.arrow_back,
-              //       color: Colors.white,
-              //     ),
-              //     onTap: () {
-              //       Navigator.pop(context, 'newData');
-              //     },
-              //   ),
-              // ),
               backgroundColor: Color(int.parse(
                   '${colours[snapshot[index].type![0].toLowerCase()]}')),
               body: Stack(
@@ -147,6 +140,13 @@ class _PageViewPokemonScreenState extends State<PageViewPokemonScreen> {
                     ),
                   ),
                   //CONTAINER Details
+                  // TabBar(
+                  //     controller: _tcontrol,
+                  //     tabs: [
+                  //       new Tab(text: 'Info'),
+                  //       new Tab(text: 'Stats'),
+                  //     ],
+                  //   ),
                   Positioned(
                     bottom: 0,
                     child: Container(
@@ -160,7 +160,12 @@ class _PageViewPokemonScreenState extends State<PageViewPokemonScreen> {
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(20),
-                        child: Column(
+                        child:
+                            // TabBarView(
+                            //   controller: _tcontrol,
+                            //   children: [
+
+                            Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SizedBox(
@@ -372,6 +377,9 @@ class _PageViewPokemonScreenState extends State<PageViewPokemonScreen> {
                             )
                           ],
                         ),
+                        //AQUI IRIA EL OTRO COLUMN Junto a sus stats de otra api
+                        //   ],
+                        // ),
                       ),
                     ),
                   ),
