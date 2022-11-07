@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_pokemon.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
+import 'package:flutter_application_1/screens/Authentications/facebook_login_screen.dart';
 import 'package:flutter_application_1/screens/about_us_screen.dart';
 import 'package:flutter_application_1/screens/apiPokemon/details_pokemon_screen.dart';
 import 'package:flutter_application_1/screens/apiPokemon/list_all_pokes_screen.dart';
@@ -70,7 +71,8 @@ class PMSNApp extends StatelessWidget {
         '/favoritesMovies': (BuildContext context) => FavoritesMoviesScreen(),
         '/pokedex': (BuildContext context) => AllPokemonScreen(),
         '/detailPokemon': (BuildContext context) => DetailPokemonScreen(),
-        '/pageViewPoke': (BuildContext context) => PageViewPokemonScreen()
+        '/pageViewPoke': (BuildContext context) => PageViewPokemonScreen(),
+        '/facebook_login': (BuildContext context) => FacebookLoginScreen(),
       },
     );
   }

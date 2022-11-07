@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
@@ -18,6 +20,31 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //this is to start form validation but is not required
   //final _formKey = GlobalKey<FormState>();
+  var loading = false;
+
+  void _loginWithFacebook() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      final facebookLoginResult = await FacebookAuth.instance.login();
+      final userData = await FacebookAuth.instance.getUserData();
+
+      final facebookAuthCredential = FacebookAuthProvider.credential(
+          facebookLoginResult.accessToken!.token);
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+
+      await FirebaseFirestore.instance.collection('users').add({
+        'email': userData['email'],
+        'imageUrl': userData['picture']['data']['url'],
+        'name': userData['name'],
+      });
+      Navigator.pushNamed(context, '/onboardingPage');
+    } on FirebaseAuthException catch (e) {
+      var title = '';
+      print('ERROR EN: $e');
+    }
+  }
 
   //to initializate the sharedMethod
   void sharedMethod() async {
@@ -145,14 +172,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else {
                     print('Credenciales invalidas');
                   }
-
-                  // setState(() {
-                  //   txtConUser.text.isEmpty
-                  //       ? txtConUser.text = 'DEFAULT_USER'
-                  //       : '';
-                  // });
-
-                  //MaterialPageRoute(builder: (context) {}));
                 },
                 child: Image.asset(
                   'assets/pokeball11.png',
@@ -169,7 +188,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(children: [
                   SocialLoginButton(
                     buttonType: SocialLoginButtonType.facebook,
-                    onPressed: () {},
+                    onPressed: () {
+                      _loginWithFacebook();
+                      //Navigator.pushNamed(context, '/facebook_login');
+                    },
                   ),
                   SizedBox(height: 5),
                   SocialLoginButton(
