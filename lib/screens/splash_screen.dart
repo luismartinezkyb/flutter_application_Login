@@ -86,8 +86,10 @@ class _SplashScreen2State extends State<SplashScreen2> {
           );
         }
         if (snapshot.hasData) {
+          print('user logged with: ${snapshot.data}');
           return DashBoardScreen2();
         } else {
+          print('user not logged');
           return LoginScreen();
         }
       },

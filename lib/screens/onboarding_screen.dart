@@ -22,6 +22,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   bool isLastPage = false;
   String username = '';
   String password = '';
+  int loginWith = 0;
 
   @override
   void dispose() {
@@ -49,10 +50,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
 
-    if (arguments.isEmpty || arguments['username'].isEmpty) {
+    if (arguments.isEmpty || arguments['username'] == null) {
       username = "";
       password = "";
-    } else {
+    } else if (arguments['username'] != null) {
       username = arguments['username'];
       password = arguments['username'].replaceAll(' ', '') + '@gmail.com';
     }
@@ -383,8 +384,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 leading: Image.asset('assets/pokebola2.png'),
               ),
               onPressed: () async {
-                Navigator.pushNamed(context, '/dash',
-                    arguments: {"username": username, "password": password});
+                Navigator.pushNamed(context, '/dash', arguments: {
+                  "username": username,
+                  "password": password,
+                  "loginWith": loginWith
+                });
               },
             )
           : Container(

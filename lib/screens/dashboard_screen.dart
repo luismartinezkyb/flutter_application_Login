@@ -4,10 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/theme_screen.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database_helper_photo.dart';
+import '../firebase/google_authentication.dart';
 import '../models/photo_model.dart';
 import '../settings/styles_settings.dart';
 
@@ -31,8 +33,12 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   String nameUser = '';
   bool checkPhoto = true;
   int numTema = 1;
+  String loggedWith = '';
   final userFirebase = FirebaseAuth.instance.currentUser!;
+  final GoogleAuthentication _googleAuth = GoogleAuthentication();
 //METHODS SHARED ETC
+//https://www.youtube.com/watch?v=PweQbVgR9iI&ab_channel=ProgrammingAddict
+//to see what kind of errors the user gets
 //METHODS OF SHARED PREFERENCES
   void sharedMethod() async {
     final prefs = await SharedPreferences.getInstance();
@@ -52,6 +58,28 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     final success = await prefs.remove('user');
   }
 
+  void logOut() {
+    switch (loggedWith) {
+      case 'facebook.com':
+        print('Cerrando sesión de facebook');
+        FacebookAuth.instance.logOut();
+        break;
+      case 'password':
+        print('Cerrando sesión con email y password');
+        FirebaseAuth.instance.signOut();
+        break;
+      case 'google.com':
+        print('Cerrando sesión de google');
+        _googleAuth.logout();
+        break;
+      default:
+        FirebaseAuth.instance.signOut();
+        break;
+    }
+
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
   @override
   void initState() {
     sharedMethod();
@@ -66,8 +94,8 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   Widget build(BuildContext context) {
     ThemeProvider tema = Provider.of<ThemeProvider>(context);
 
-    print('USUARIO FIREBASE: ${userFirebase.displayName}');
-    final urlAsset = 'assets/ProfilePicture.png';
+    print('USUARIO FIREBASE: ${userFirebase}');
+    //final urlAsset = 'assets/ProfilePicture.png';
     //PARA GUARDAR LA PRIMERA IMAGEN
     // photo pic = photo(0, urlAsset);
     // _database!.save(pic);
@@ -104,9 +132,25 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     );
 
 //METHODS OF ARGUMENTS
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
+    //final arguments = (ModalRoute.of(context)?.settings.arguments ??
+    //  <String, dynamic>{}) as Map;
 
+    //Aqui tendriamos que hacer la comparacion sobre con que se esta logueando
+    print(
+        'logged with: ${FirebaseAuth.instance.currentUser!.providerData[0].providerId}');
+    loggedWith = FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+
+    switch (loggedWith) {
+      case 'facebook.com':
+        print('Es con Facebook el user');
+        break;
+      case 'password':
+        print('Es con Email y password el user');
+        break;
+      case 'google.com':
+        print('Es con Google el user');
+        break;
+    }
     nameUser = userFirebase.displayName!;
     email = userFirebase.email!;
     //Lo siguiente era para saber si es que se podría utilizar el arguments y las preferencias compartidas
@@ -324,10 +368,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
               trailing: Icon(Icons.close),
               title: Text('Log out'),
               onTap: () {
-                FirebaseAuth.instance.signOut();
-                removeMethod();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/login', (route) => false);
+                logOut();
                 //Navigator.pushNamedAndRemoveUntil(context, (route) => ModalRoute('/login'));
                 //Navigator.pushNamed(context, '/login');
               },
@@ -367,9 +408,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
                 ElevatedButton(
                   onPressed: () {
                     removeMethod();
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/login', (route) => false);
+                    logOut();
                   },
                   child: Text(
                     'EMERGENCY LOG OUT',
@@ -390,3 +429,5 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     );
   }
 }
+
+ //User(displayName: Luis Martinez, email: luisramonmartinezarredondo08@gmail.com, emailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2022-11-07 23:31:41.465Z, lastSignInTime: 2022-11-08 00:14:23.659Z), phoneNumber: null, photoURL: https://graph.facebook.com/2460536054084767/picture, providerData, [UserInfo(displayName: Luis Martinez, email: luisramonmartinezarredondo08@gmail.com, phoneNumber: null, photoURL: https://graph.facebook.com/2460536054084767/picture, providerId: facebook.com, uid: 2460536054084767)], refreshToken: , tenantId: null, uid: TkzXqsqkJMOWGksr7uy3m0g2hvM2)

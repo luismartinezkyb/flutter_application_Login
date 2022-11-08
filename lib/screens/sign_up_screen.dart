@@ -38,7 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Container(
             padding: EdgeInsets.all(35),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),
