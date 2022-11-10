@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/theme_screen.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,10 +35,17 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
   bool checkPhoto = true;
   int numTema = 1;
   String loggedWith = '';
+  Map<String, dynamic>? _userData;
+  AccessToken? _accessToken;
+  bool _checking = true;
+
   final userFirebase = FirebaseAuth.instance.currentUser!;
   final GoogleAuthentication _googleAuth = GoogleAuthentication();
+//
+
 //METHODS SHARED ETC
 //https://www.youtube.com/watch?v=PweQbVgR9iI&ab_channel=ProgrammingAddict
+//https://www.youtube.com/watch?v=Ai3QWQ_1pJM&ab_channel=LazyTechNo
 //to see what kind of errors the user gets
 //METHODS OF SHARED PREFERENCES
   void sharedMethod() async {
@@ -63,6 +71,7 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       case 'facebook.com':
         print('Cerrando sesión de facebook');
         FacebookAuth.instance.logOut();
+        FirebaseAuth.instance.signOut();
         break;
       case 'password':
         print('Cerrando sesión con email y password');
@@ -71,6 +80,11 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
       case 'google.com':
         print('Cerrando sesión de google');
         _googleAuth.logout();
+        FirebaseAuth.instance.signOut();
+        break;
+      case 'github.com':
+        print('Cerrando sesión de github');
+        FirebaseAuth.instance.signOut();
         break;
       default:
         FirebaseAuth.instance.signOut();
@@ -85,6 +99,18 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     sharedMethod();
     _database = DatabaseHelperPhoto();
     super.initState();
+    _checkIfLogged();
+  }
+
+  _checkIfLogged() async {
+    final accessToken = await FacebookAuth.instance.accessToken;
+    if (accessToken != null) {
+      final userData = await FacebookAuth.instance.getUserData();
+      _accessToken = accessToken;
+      setState(() {
+        _userData = userData;
+      });
+    }
   }
 
 //FileImage(File(snapshot.data![0]['photoName']))
@@ -132,23 +158,43 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
     );
 
 //METHODS OF ARGUMENTS
-    //final arguments = (ModalRoute.of(context)?.settings.arguments ??
-    //  <String, dynamic>{}) as Map;
+    // final newArguments = (ModalRoute.of(context)?.settings.arguments ??
+    //     <String, dynamic>{}) as Map;
 
     //Aqui tendriamos que hacer la comparacion sobre con que se esta logueando
     print(
         'logged with: ${FirebaseAuth.instance.currentUser!.providerData[0].providerId}');
-    loggedWith = FirebaseAuth.instance.currentUser!.providerData[0].providerId;
 
+    loggedWith = FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+    var checkimage = '';
+    var userPhoto = '';
     switch (loggedWith) {
       case 'facebook.com':
+        _userData != null
+            ? userPhoto = _userData!['picture']['data']['url']
+            : print('THERE is nothing');
         print('Es con Facebook el user');
+        checkimage = 'assets/facebook_logo.png';
+        //print(FacebookAuth.instance.accessToken.token);
+
         break;
       case 'password':
+        checkimage = 'assets/email_logo.png';
         print('Es con Email y password el user');
         break;
       case 'google.com':
+        userPhoto = userFirebase.photoURL!;
+        checkimage = 'assets/google_logo.png';
         print('Es con Google el user');
+        break;
+      case 'github.com':
+        userPhoto = userFirebase.photoURL!;
+        checkimage = 'assets/github_logo.png';
+        print('Es con Github el user');
+        break;
+      default:
+        checkimage = 'assets/pokebola2.png';
+
         break;
     }
     nameUser = userFirebase.displayName!;
@@ -239,15 +285,22 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
           children: [
             UserAccountsDrawerHeader(
               currentAccountPicture: GestureDetector(
-                  child: Hero(tag: 'profile_picture', child: futuro),
+                  child: loggedWith == 'password'
+                      ? Hero(tag: 'profile_picture', child: futuro)
+                      : CircleAvatar(
+                          backgroundImage: NetworkImage(userPhoto.length != 0
+                              ? '$userPhoto'
+                              : 'http://www.gravatar.com/avatar/?d=mp')),
                   onTap: () async {
-                    final data =
-                        await Navigator.pushNamed(context, '/userprofile');
-                    print(data);
+                    if (loggedWith == 'password') {
+                      final data =
+                          await Navigator.pushNamed(context, '/userprofile');
+                      print(data);
 
-                    setState(() {
-                      build(context);
-                    });
+                      setState(() {
+                        build(context);
+                      });
+                    }
                   }),
               accountName: Text(
                 nameUser,
@@ -390,6 +443,12 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
         ),
       ),
       body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/img_fondo.jpeg'),
+            fit: BoxFit.cover,
+          ),
+        ),
         padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
         height: MediaQuery.of(context).size.height,
         child: Center(
@@ -405,6 +464,26 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
               children: [
                 ColorWidgetRow(),
                 SizedBox(height: 20),
+                Text(
+                  'You are logged in with :',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 10),
+                checkimage.length != 0
+                    ? Image.asset(
+                        checkimage,
+                        width: 50,
+                      )
+                    : Image.asset(
+                        'assets/pokebola2.png',
+                        width: 50,
+                      ),
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     removeMethod();
@@ -419,15 +498,9 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
             ),
           ),
         ),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/img_fondo.jpeg'),
-            fit: BoxFit.cover,
-          ),
-        ),
       ),
     );
   }
 }
 
- //User(displayName: Luis Martinez, email: luisramonmartinezarredondo08@gmail.com, emailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2022-11-07 23:31:41.465Z, lastSignInTime: 2022-11-08 00:14:23.659Z), phoneNumber: null, photoURL: https://graph.facebook.com/2460536054084767/picture, providerData, [UserInfo(displayName: Luis Martinez, email: luisramonmartinezarredondo08@gmail.com, phoneNumber: null, photoURL: https://graph.facebook.com/2460536054084767/picture, providerId: facebook.com, uid: 2460536054084767)], refreshToken: , tenantId: null, uid: TkzXqsqkJMOWGksr7uy3m0g2hvM2)
+//User(displayName: Luis Martinez, email: luisramonmartinezarredondo08@gmail.com, emailVerified: false, isAnonymous: false, metadata: UserMetadata(creationTime: 2022-11-07 23:31:41.465Z, lastSignInTime: 2022-11-08 00:14:23.659Z), phoneNumber: null, photoURL: https://graph.facebook.com/2460536054084767/picture, providerData, [UserInfo(displayName: Luis Martinez, email: luisramonmartinezarredondo08@gmail.com, phoneNumber: null, photoURL: https://graph.facebook.com/2460536054084767/picture, providerId: facebook.com, uid: 2460536054084767)], refreshToken: , tenantId: null, uid: TkzXqsqkJMOWGksr7uy3m0g2hvM2)

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 import '../firebase/email_authentication.dart';
+import '../firebase/github_authentication.dart';
 import '../firebase/google_authentication.dart';
 //import 'package:social_login_buttons/social_login_buttons.dart';
 
@@ -22,10 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
   //this is to start form validation but is not required
   //final _formKey = GlobalKey<FormState>();
   var loading = false;
-
+  GithubAuthentication file = GithubAuthentication();
   @override
   void dispose() {
-    // TODO: implement dispose
+    // TODO: implement disposegUserData
     super.dispose();
   }
 
@@ -35,32 +36,19 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final facebookLoginResult = await FacebookAuth.instance.login();
-      final userData = await FacebookAuth.instance.getUserData();
+      print(facebookLoginResult.status);
+      if (facebookLoginResult.status == LoginStatus.success) {
+        final facebookAuthCredential = FacebookAuthProvider.credential(
+            facebookLoginResult.accessToken!.token);
+        await FirebaseAuth.instance
+            .signInWithCredential(facebookAuthCredential);
 
-      final facebookAuthCredential = FacebookAuthProvider.credential(
-          facebookLoginResult.accessToken!.token);
-      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-
-      await FirebaseFirestore.instance.collection('users').add({
-        'email': userData['email'],
-        'imageUrl': userData['picture']['data']['url'],
-        'name': userData['name'],
-      });
-      if (mounted) {
-        Navigator.pushNamed(context, '/onboardingPage');
+        mounted
+            ? Navigator.pushNamed(context, '/onboardingPage')
+            : print('mounted');
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       }
-
-      // final userDoc =
-      //     FirebaseFirestore.instance.collection('users').doc('my-id');
-
-      // final json = {
-      //   'email': userData['email'],
-      //   'imageUrl': userData['picture']['data']['url'],
-      //   'name': userData['name'],
-      // };
-
-      // await userDoc.set(json);
-
     } on FirebaseAuthException catch (e) {
       var title = '';
       print('ERROR EN: $e');
@@ -253,7 +241,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 5),
                         SocialLoginButton(
                           buttonType: SocialLoginButtonType.github,
-                          onPressed: () {},
+                          onPressed: () {
+                            file.getSomething();
+                          },
                         ),
                         SizedBox(height: 5),
                         SocialLoginButton(

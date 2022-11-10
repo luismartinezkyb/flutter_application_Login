@@ -32,9 +32,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: Text('Registro de usuarios'),
       ),
       body: Container(
-        color: Colors.red,
         child: Padding(
-          padding: const EdgeInsets.only(top: 40),
+          padding: const EdgeInsets.only(top: 200),
           child: Container(
             padding: EdgeInsets.all(35),
             decoration: BoxDecoration(
