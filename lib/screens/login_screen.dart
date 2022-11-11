@@ -241,8 +241,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 5),
                         SocialLoginButton(
                           buttonType: SocialLoginButtonType.github,
-                          onPressed: () {
-                            file.getSomething();
+                          onPressed: () async {
+                            var githubLogin = await file.getSomething();
+                            print('Imprimento del login github $githubLogin');
+
+                            if (githubLogin) {
+                              Navigator.pushNamed(context, '/onboardingPage');
+                            }
                           },
                         ),
                         SizedBox(height: 5),
@@ -258,6 +263,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pushNamed(context, '/onboardingPage');
                             } else {
                               print('Credenciales invalidas');
+                              setState(() {
+                                loading = true;
+                              });
                             }
                           },
                         ),
