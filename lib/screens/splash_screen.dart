@@ -87,7 +87,17 @@ class _SplashScreen2State extends State<SplashScreen2> {
         }
         if (snapshot.hasData) {
           print('user logged with: ${snapshot.data}');
-          return DashBoardScreen2();
+          //FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+
+          if (snapshot.data!.providerData[0].providerId == 'password') {
+            if (snapshot.data!.emailVerified) {
+              return DashBoardScreen2();
+            } else {
+              return LoginScreen();
+            }
+          } else {
+            return DashBoardScreen2();
+          }
         } else {
           print('user not logged');
           return LoginScreen();
@@ -100,6 +110,10 @@ class _SplashScreen2State extends State<SplashScreen2> {
     // } else {
     //   return LoginScreen();
     // }
+  }
+
+  Widget verifyEmail() {
+    return DashBoardScreen2();
   }
 
   @override

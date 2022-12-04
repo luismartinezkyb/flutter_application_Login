@@ -197,7 +197,10 @@ class _DashBoardScreen2State extends State<DashBoardScreen2> {
 
         break;
     }
-    nameUser = userFirebase.displayName!;
+    nameUser = userFirebase.displayName != null
+        ? userFirebase.displayName!
+        : 'errorname';
+
     email = userFirebase.email!;
     //Lo siguiente era para saber si es que se podría utilizar el arguments y las preferencias compartidas
     // if (usernamePref == '') {
